@@ -15,7 +15,10 @@ defmodule Nabo.Mixfile do
   # Type "mix help compile.app" for more information
   def application do
     # Specify extra applications you'll use from Erlang/Elixir
-    [extra_applications: [:logger]]
+    [
+      mod: {Nabo, []},
+      extra_applications: [:logger],
+    ]
   end
 
   # Dependencies can be Hex packages:
@@ -28,6 +31,13 @@ defmodule Nabo.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    []
+    [
+      {:cowboy, "~> 1.1.2"},
+      {:plug, "~> 1.3.4"},
+      {:earmark, "~> 1.2.2"},
+      {:scrivener, "~> 2.0"},
+      {:scrivener_list, "~> 1.0"},
+      {:poison, "~> 3.1.0"},
+    ]
   end
 end

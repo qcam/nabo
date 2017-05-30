@@ -1,18 +1,9 @@
 defmodule Nabo do
-  @moduledoc """
-  Documentation for Nabo.
-  """
+  use Application
 
-  @doc """
-  Hello world.
+  def start(_, _) do
+    children = []
 
-  ## Examples
-
-      iex> Nabo.hello
-      :world
-
-  """
-  def hello do
-    :world
+    Supervisor.start_link(children, strategy: :one_for_one)
   end
 end
