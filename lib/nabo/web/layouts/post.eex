@@ -1,0 +1,2 @@
+<h1 class="page-title"><%= post.title %></h1>
+<section><%= post.body_html %></section>

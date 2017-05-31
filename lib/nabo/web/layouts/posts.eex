@@ -1,0 +1,11 @@
+<h1 class="page-title">Nabo Blog</h1>
+<div class="posts">
+  <%= unless Enum.any?(posts) do %>
+    <p>Add your first post to priv/posts</p>
+  <% end %>
+  <%= for post <- posts do %>
+  <div class="post">
+    <h3><a href="/<%= post.slug %>"><%= post.title %></a></h3>
+  </div>
+  <%= end %>
+</div>
