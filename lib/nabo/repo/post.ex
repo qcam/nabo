@@ -28,11 +28,12 @@ defmodule Nabo.Repo.Post do
       def get(name) when is_binary(name) do
         with content <- _find(:content, name),
              excerpt_html <- _find(:excerpt_html, name),
-             body_html <- _find(:excerpt_html, name) do
+             body_html <- _find(:body_html, name) do
           post = content
                  |> Post.from_string()
                  |> Post.put_excerpt_html(excerpt_html)
                  |> Post.put_body_html(body_html)
+                 |> IO.inspect
           {:ok, post}
         else
           {:error, reason} -> {:error, reason}
@@ -48,7 +49,7 @@ defmodule Nabo.Repo.Post do
 
       def all do
         availables()
-        |> Enum.map(& get(&1))
+        |> Enum.map(& get!(&1))
       end
 
       def availables do
