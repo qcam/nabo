@@ -6,14 +6,17 @@ defmodule Nabo.Post do
   def from_string(string) do
     case FrontMatter.from_string(string) do
       {:ok, {meta, excerpt, body}} ->
-        %__MODULE__{
-          title: meta.title,
-          slug: meta.slug,
-          date: meta.date,
-          excerpt: String.trim(excerpt),
-          body: String.trim(body),
-          metadata: meta.extras,
-        }
+        {
+          :ok,
+          %__MODULE__{
+            title: meta.title,
+            slug: meta.slug,
+            date: meta.date,
+            excerpt: excerpt,
+            body: body,
+            metadata: meta.extras,
+          },
+      }
       {:error, reason} -> {:error, reason}
     end
   end
