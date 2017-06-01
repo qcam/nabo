@@ -33,7 +33,6 @@ defmodule Nabo.Repo.Post do
                  |> Post.from_string()
                  |> Post.put_excerpt_html(excerpt_html)
                  |> Post.put_body_html(body_html)
-                 |> IO.inspect
           {:ok, post}
         else
           {:error, reason} -> {:error, reason}

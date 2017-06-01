@@ -1,4 +1,7 @@
-<h1 class="page-title">Nabo Blog</h1>
+<h1 class="page-title">
+  All posts
+  <span class="badge"><%= Enum.count(posts) %></span>
+</h1>
 <div class="posts">
   <%= unless Enum.any?(posts) do %>
     <p>Add your first post to priv/posts</p>

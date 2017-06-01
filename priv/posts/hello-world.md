@@ -4,6 +4,6 @@
   "date": "2017-01-01"
 }
 ---
-# Welcome to Nabo
+Hi there, welcome to Nabo blog!
 
 This is your first post built with Nabo.
