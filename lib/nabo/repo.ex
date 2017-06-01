@@ -1,4 +1,4 @@
-defmodule Nabo.Repo.Post do
+defmodule Nabo.Repo do
   alias Nabo.Post
 
   defmacro __using__(options) do
