@@ -16,10 +16,7 @@ defmodule Nabo.Mixfile do
   end
 
   def application do
-    [
-      mod: {Nabo, []},
-      application: [:logger],
-    ]
+    [application: [:logger]]
   end
 
   defp deps do
@@ -27,8 +24,6 @@ defmodule Nabo.Mixfile do
       {:cowboy, "~> 1.1.2"},
       {:plug, "~> 1.3.4"},
       {:earmark, "~> 1.2.2"},
-      {:scrivener, "~> 2.0"},
-      {:scrivener_list, "~> 1.0"},
       {:poison, "~> 3.1.0"},
     ]
   end
