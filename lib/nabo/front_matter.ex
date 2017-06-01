@@ -8,15 +8,17 @@ defmodule Nabo.FrontMatter do
   end
 
   defp parse_parts([meta_string, excerpt, body]) do
+    trimmed_excerpt = String.trim(excerpt)
+    trimmed_body = String.trim(body)
     case Metadata.from_string(meta_string) do
-      {:ok, metadata} -> {:ok, {metadata, excerpt, body}}
+      {:ok, metadata} -> {:ok, {metadata, trimmed_excerpt, trimmed_body}}
       {:error, reason} -> {:error, reason}
     end
   end
   defp parse_parts([meta_string, body]) do
     parse_parts([meta_string, "", body])
   end
-  defp parse_parts(_parts), do: {:error, "Failed to parse front matter"}
+  defp parse_parts(parts), do: {:error, "Got wrong front matter format #{parts}"}
 
   defp split_parts(string) do
     split_pattern = ~r/[\s\r\n]---[\s\r\n]/s
