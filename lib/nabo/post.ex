@@ -1,7 +1,7 @@
 defmodule Nabo.Post do
   alias Nabo.FrontMatter
 
-  defstruct [:title, :slug, :date, :excerpt, :excerpt_html, :body, :body_html]
+  defstruct [:title, :slug, :date, :excerpt, :excerpt_html, :body, :body_html, :metadata]
 
   def from_string(string) do
     case FrontMatter.from_string(string) do
@@ -12,6 +12,7 @@ defmodule Nabo.Post do
           date: meta.date,
           excerpt: String.trim(excerpt),
           body: String.trim(body),
+          metadata: meta.extras,
         }
       {:error, reason} -> {:error, reason}
     end

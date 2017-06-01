@@ -1,22 +1,22 @@
 defmodule Nabo.Metadata do
-  defstruct [:slug, :title, :date]
+  defstruct [:slug, :title, :date, :extras]
 
   def from_string(meta_string) do
     case Poison.decode(meta_string) do
       {:ok, metadata} ->
-        with {:ok, date} <- Date.from_iso8601(metadata["date"]) do
-          {
-            :ok,
-            %__MODULE__{
-              title: metadata["title"],
-              slug: metadata["slug"],
-              date: date,
-            },
-          }
-        else
-          {:error, reason} ->
-            {:error, "Error when parse metadata date: #{Exception.message(reason)}"}
-        end
+        title = Map.fetch!(metadata, "title")
+        slug = Map.fetch!(metadata, "slug")
+        date = Map.fetch!(metadata, "date")
+
+        {
+          :ok,
+          %__MODULE__{
+            title: title,
+            slug: slug,
+            date: date,
+            extras: metadata,
+          },
+        }
       {:error, reason} ->
         {:error, "Error when parse metadata: #{Exception.message(reason)}"}
     end
