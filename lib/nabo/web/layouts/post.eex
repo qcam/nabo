@@ -1,5 +1,0 @@
-<h1 class="post-title"><%= post.title %></h1>
-<div class="post-meta">
-  Published on <%= post.date %>
-</div>
-<section class="post-body"><%= post.body_html %></section>
