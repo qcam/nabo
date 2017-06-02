@@ -49,7 +49,9 @@ defmodule Nabo.Repo do
       def all do
         {
           :ok,
-          availables() |> Enum.map(& get!(&1))
+          availables()
+          |> Stream.map(& Task.async(fn -> get!(&1) end))
+          |> Enum.map(&Task.await/1)
         }
       end
 
