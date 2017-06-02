@@ -23,32 +23,37 @@ defmodule Nabo.Repo do
     quote [generated: true] do
       unquote(codes)
 
-      defp _find(_, name), do: {:error, "Could not find post with name #{name}."}
+      defp _find(_, name), do: nil
 
       def get(name) when is_binary(name) do
-        with content <- _find(:content, name),
-             excerpt_html <- _find(:excerpt_html, name),
-             body_html <- _find(:body_html, name) do
-          post = content
-                 |> Post.from_string()
-                 |> Post.put_excerpt_html(excerpt_html)
-                 |> Post.put_body_html(body_html)
-          {:ok, post}
+        if Enum.member?(availables(), name) do
+          content = _find(:content, name)
+          excerpt_html = _find(:excerpt_html, name)
+          body_html = _find(:body_html, name)
+          {:ok, post} = Post.from_string(content)
+          {
+            :ok,
+            post
+            |> Post.put_excerpt_html(excerpt_html)
+            |> Post.put_body_html(body_html)
+          }
         else
-          {:error, reason} -> {:error, reason}
+          {:error, "Could not find post #{name}. Availables: #{availables()}"}
         end
       end
 
       def get!(name) when is_binary(name) do
         case get(name) do
           {:ok, post} -> post
-          {:error, _reason} -> raise "Failed to get post"
+          {:error, reason} -> raise(reason)
         end
       end
 
       def all do
-        availables()
-        |> Enum.map(& get!(&1))
+        {
+          :ok,
+          availables() |> Enum.map(& get!(&1))
+        }
       end
 
       def availables do
@@ -70,9 +75,9 @@ defmodule Nabo.Repo do
   end
 
   defp compile(path, root) do
-    name   = path_to_name(path, root)
+    name = path_to_name(path, root)
     content = File.read!(path)
-    post = Nabo.Post.from_string(content)
+    {:ok, post} = Nabo.Post.from_string(content)
     excerpt_html = Earmark.as_html!(post.excerpt)
     body_html = Earmark.as_html!(post.body)
 
