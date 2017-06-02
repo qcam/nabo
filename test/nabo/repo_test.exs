@@ -23,11 +23,11 @@ defmodule Nabo.RepoTest do
     }
     assert(expected == post)
 
-    assert({:error, "Could not find post foo. Availables: valid-post"} = Nabo.TestRepo.get("foo"))
+    assert({:error, _} = Nabo.TestRepo.get("foo"))
   end
 
   test "all/1" do
-    assert({:ok, [post]} = Nabo.TestRepo.all())
+    assert({:ok, posts} = Nabo.TestRepo.all())
     expected = %Nabo.Post{
       title: "Valid Post",
       slug: "valid-post",
@@ -38,10 +38,17 @@ defmodule Nabo.RepoTest do
       excerpt_html: "<p>Welcome to your first Nabo Post</p>\n",
       metadata: %{"date" => "2017-01-01", "slug" => "valid-post", "title" => "Valid Post"},
     }
-    assert(expected == post)
+    assert(Enum.member?(posts, expected))
   end
 
   test "all/1 with empty repo" do
     assert({:ok, []} = Nabo.EmptyTestRepo.all())
+  end
+
+  test "availables" do
+    availables = Nabo.TestRepo.availables()
+    assert(Enum.count(availables) == 2)
+    assert(Enum.member?(availables, "valid-post"))
+    assert(Enum.member?(availables, "valid-post-1"))
   end
 end

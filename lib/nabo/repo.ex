@@ -12,11 +12,8 @@ defmodule Nabo.Repo do
   defmacro __before_compile__(env) do
     root = Module.get_attribute(env.module, :root)
     pattern = "**/*"
-
-    pairs = for path <- find_all(root, pattern) do
-      compile(path, root)
-    end
-
+    pairs = find_all(root, pattern)
+            |> Enum.map(& compile(&1))
     names = Enum.map(pairs, &elem(&1, 0))
     codes = Enum.map(pairs, &elem(&1, 1))
 
@@ -38,7 +35,7 @@ defmodule Nabo.Repo do
             |> Post.put_body_html(body_html)
           }
         else
-          {:error, "Could not find post #{name}. Availables: #{availables()}"}
+          {:error, "Could not find post #{name}. Availables: #{formatted_availables()}"}
         end
       end
 
@@ -59,6 +56,10 @@ defmodule Nabo.Repo do
       def availables do
         unquote(names)
       end
+
+      defp formatted_availables() do
+        availables() |> Enum.join(", ")
+      end
     end
   end
 
@@ -68,32 +69,25 @@ defmodule Nabo.Repo do
     |> Path.wildcard()
   end
 
-  defp path_to_name(path, root) do
-    path
-    |> Path.rootname()
-    |> Path.relative_to(root)
-  end
-
-  defp compile(path, root) do
-    name = path_to_name(path, root)
+  defp compile(path) do
     content = File.read!(path)
     {:ok, post} = Nabo.Post.from_string(content)
     excerpt_html = Earmark.as_html!(post.excerpt)
     body_html = Earmark.as_html!(post.body)
 
-    {name, quote do
+    {post.slug, quote do
       @file unquote(path)
       @external_resource unquote(path)
 
-      defp _find(unquote(:content), unquote(name)) do
+      defp _find(unquote(:content), unquote(post.slug)) do
         unquote(content)
       end
 
-      defp _find(unquote(:excerpt_html), unquote(name)) do
+      defp _find(unquote(:excerpt_html), unquote(post.slug)) do
         unquote(excerpt_html)
       end
 
-      defp _find(unquote(:body_html), unquote(name)) do
+      defp _find(unquote(:body_html), unquote(post.slug)) do
         unquote(body_html)
       end
     end}
