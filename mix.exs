@@ -30,7 +30,7 @@ defmodule Nabo.Mixfile do
     [maintainers: ["Cẩm Huỳnh"],
      licenses: ["MIT"],
      links: %{"GitHub" => "https://github.com/qcam/nabo"},
-     files: ~w(mix.exs README.md lib priv)]
+     files: ~w(mix.exs README.md lib)]
   end
 
   defp description do
