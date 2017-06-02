@@ -21,8 +21,6 @@ defmodule Nabo.Mixfile do
 
   defp deps do
     [
-      {:cowboy, "~> 1.1.2"},
-      {:plug, "~> 1.3.4"},
       {:earmark, "~> 1.2.2"},
       {:poison, "~> 3.1.0"},
     ]
