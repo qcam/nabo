@@ -20,22 +20,12 @@ defmodule Nabo.Repo do
     quote [generated: true] do
       unquote(codes)
 
-      defp _find(_, name), do: nil
+      defp _find(name), do: nil
 
       def get(name) when is_binary(name) do
-        if Enum.member?(availables(), name) do
-          content = _find(:content, name)
-          excerpt_html = _find(:excerpt_html, name)
-          body_html = _find(:body_html, name)
-          {:ok, post} = Post.from_string(content)
-          {
-            :ok,
-            post
-            |> Post.put_excerpt_html(excerpt_html)
-            |> Post.put_body_html(body_html)
-          }
-        else
-          {:error, "Could not find post #{name}. Availables: #{formatted_availables()}"}
+        case _find(name) do
+          %Post{} = post -> {:ok, post}
+          nil -> {:error, "Could not find post #{name}. Availables: #{formatted_availables()}"}
         end
       end
 
@@ -76,21 +66,17 @@ defmodule Nabo.Repo do
     {:ok, post} = Nabo.Post.from_string(content)
     excerpt_html = Earmark.as_html!(post.excerpt)
     body_html = Earmark.as_html!(post.body)
+    compiled_body = post
+                    |> Post.put_excerpt_html(excerpt_html)
+                    |> Post.put_body_html(body_html)
+                    |> Macro.escape
 
     {post.slug, quote do
       @file unquote(path)
       @external_resource unquote(path)
 
-      defp _find(unquote(:content), unquote(post.slug)) do
-        unquote(content)
-      end
-
-      defp _find(unquote(:excerpt_html), unquote(post.slug)) do
-        unquote(excerpt_html)
-      end
-
-      defp _find(unquote(:body_html), unquote(post.slug)) do
-        unquote(body_html)
+      defp _find(unquote(post.slug)) do
+        unquote(compiled_body)
       end
     end}
   end
