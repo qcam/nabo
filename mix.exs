@@ -23,6 +23,7 @@ defmodule Nabo.Mixfile do
     [
       {:earmark, "~> 1.2.2"},
       {:poison, "~> 3.1.0"},
+      {:ex_doc, ">= 0.0.0", only: :dev},
     ]
   end
 
@@ -35,7 +36,7 @@ defmodule Nabo.Mixfile do
 
   defp description do
     """
-    A simple blog engine for Elixir
+    A dead simple, extendable and fast blog engine in Elixir
     """
   end
 end

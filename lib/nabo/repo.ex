@@ -1,6 +1,22 @@
 defmodule Nabo.Repo do
+  @moduledoc """
+  Precompiles and provides interface to interact with your posts.
+
+  ## Example
+
+      defmodule MyRepo do
+        use Nabo.Repo, root: "priv/posts"
+      end
+
+      {:ok, posts} = MyRepo.all
+      {:ok, post} = MyRepo.get("foo")
+      post = MyRepo.get!("foo")
+
+  """
+
   alias Nabo.Post
 
+  @doc false
   defmacro __using__(options) do
     quote bind_quoted: [options: options], unquote: true do
       @root Keyword.fetch!(options, :root) |> Path.relative_to_cwd
@@ -9,6 +25,7 @@ defmodule Nabo.Repo do
     end
   end
 
+  @doc false
   defmacro __before_compile__(env) do
     root = Module.get_attribute(env.module, :root)
     pattern = "**/*"
@@ -80,4 +97,44 @@ defmodule Nabo.Repo do
       end
     end}
   end
+
+  @doc """
+  Finds a post by the given slug.
+
+  ## Example
+
+      {:ok, post} = MyRepo.get("my-slug")
+
+  """
+  @callback get(name :: String.t) :: {:ok, Nabo.Post.t} | {:error, any}
+
+  @doc """
+  Similar to `get/1` but raises error when no post was found.
+
+  ## Example
+
+      post = MyRepo.get!("my-slug")
+
+  """
+  @callback get!(name :: String.t) :: Nabo.Post.t
+
+  @doc """
+  Fetches all available posts in the repo.
+
+  ## Example
+
+      {:ok, posts} = MyRepo.all()
+
+  """
+  @callback all() :: [Nabo.Post.t]
+
+  @doc """
+  Fetches all availables post names in the repo.
+
+  ## Example
+
+      availables = MyRepo.availables()
+
+  """
+  @callback availables() :: List.t
 end

@@ -1,8 +1,76 @@
 defmodule Nabo.Post do
+  @moduledoc """
+  A struct that represents a post.
+
+  This struct represents a post with its metadata, excerpt and post body, returned by
+  `Nabo.Repo`.
+
+  ## Format
+
+  Post should be in this format:
+
+      metadata (JSON, mandatory)
+      ---
+      post excerpt (Markdown, optional)
+      ---
+      post body (Markdown, mandatory)
+
+  For example:
+
+      {
+        "title": "Hello World",
+        "slug": "hello-world",
+        "date": "2017-01-01"
+      }
+      ---
+      Welcome to my blog!
+      ---
+      ### Hello there!
+
+      This is the first post in my blog.
+
+  Post excerpt is optional, so if you prefer not to have any excerpt, leave it blank or
+  exclude it from your post.
+
+      {
+        "title": "Hello World",
+        "slug": "hello-world",
+        "date": "2017-01-01"
+      }
+      ---
+      ### Hello there!
+
+      This is the first post in my blog.
+
+  """
+
   alias Nabo.FrontMatter
 
   defstruct [:title, :slug, :date, :excerpt, :excerpt_html, :body, :body_html, :metadata]
 
+  @opaque t :: %__MODULE__{}
+
+  @doc """
+  Builds struct from markdown content.
+
+  ## Example
+
+      string = ~s(
+        {
+          "title": "Hello World",
+          "slug": "hello-world",
+          "date": "2017-01-01"
+        }
+        ---
+        Welcome to my blog!
+        ---
+        ### Hello there!
+
+        This is the first post in my blog.
+      )
+      {:ok, post} = Nabo.Post.from(string)
+  """
+  @spec from_string(string :: String.t) :: {:ok, Nabo.Post.t} | {:error, any}
   def from_string(string) do
     case FrontMatter.from_string(string) do
       {:ok, {meta, excerpt, body}} ->
@@ -21,10 +89,18 @@ defmodule Nabo.Post do
     end
   end
 
+  @doc """
+  Puts parsed excerpt content into struct.
+  """
+  @spec put_excerpt_html(post :: __MODULE__.t, excerpt_html :: String.t) :: Nabo.Post.t
   def put_excerpt_html(%__MODULE__{} = post, excerpt_html) do
     %__MODULE__{post | excerpt_html: excerpt_html}
   end
 
+  @doc """
+  Puts parsed body content into struct.
+  """
+  @spec put_body_html(post :: __MODULE__.t, body_html :: String.t) :: Nabo.Post.t
   def put_body_html(%__MODULE__{} = post, body_html) do
     %__MODULE__{post | body_html: body_html}
   end

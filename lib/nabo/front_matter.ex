@@ -1,4 +1,6 @@
 defmodule Nabo.FrontMatter do
+  @moduledoc false
+
   alias Nabo.Metadata
 
   def from_string(string) when is_binary(string) do
