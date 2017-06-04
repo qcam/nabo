@@ -2,15 +2,13 @@
 
 Dead simple blog engine
 
-## Why use Nabo?
+[Documentation](https://hexdocs.pm/nabo/0.0.1/Nabo.html).
 
-Nabo is designed to be a really fast, simple and extendable blog engine. You could
-integrate Nabo in Phoenix, Plug.Router or any kind of plugs you want.
+Nabo is designed to be a simple, fast, extendable blog engine. You can integrate Nabo to any components
+in your application like Phoenix, Plug.
 
-## Why is it fast?
-
-All markdown posts are pre-compiled, there will not be any parsing done in
-runtime so it should be deadly fast.
+It does not include routers or html generators, but focuses on doing one thing and
+does it well: manages your blog posts.
 
 ## Installation
 
@@ -20,8 +18,8 @@ def deps do
 end
 ```
 
-To start using Nabo, first you need to create your own repo. Let's assume all
-your blog posts were kept in `priv/_posts`.
+To start using Nabo, first you need to create your own repo. You can keep your
+posts anywhere in your source code but let's assume they were kept in `priv/_posts`.
 
 ```elixir
 defmodule MyWeb.Repo do
@@ -29,7 +27,7 @@ defmodule MyWeb.Repo do
 end
 ```
 
-All blog posts used in Nabo should follow this format.
+All posts in Nabo should follow this format.
 
 ```md
 {
@@ -84,7 +82,7 @@ Then in your template
 </div>
 ```
 
-### Plug.Router integration
+### Plug integration
 
 ```elixir
 defmodule MyWeb.Router do
@@ -124,19 +122,29 @@ end
 
 ## Q&A
 
+> How does Nabo work?
+
+Nabo pre-compiles all posts in the configured repo and delivers it when you ask.
+That's it, no magic.
+
 > Why this post engine does not support generating static html like Jekyll and
 > such?
 
-Personally I think Elixir is fast enough to handle this. And in fact all
-markdown files are parsed in compile time, so there's no extra parsing in
-runtime. If you are looking for a blog engine that generates static HTML so you
-can use it on Github or so, then you already have the answer, go for the awesome
-*Jekyll*
+Nabo is not meant to replace Jekyll since Jekyll has done their job really well
+(trust me the previous version of my blog was built with Jekyll). But Nabo takes
+another approach and is designed to integrate with other components in your
+application. So if you want to build a blog with more controlled functions like
+comments or traffic count, Nabo might fit your needs. But if you need a minimal
+version of static html blog that can play well with Github page, then Jekyll
+would probably be your choice.
 
-> Why this post engine does not support template/router/controller and stuff like that?
+> Why Nabo does not support template, router, controller or a server?
 
-As mentioned, Nabo is designed to be simple and easily integrate-able. Phoenix
-and Plug has already done a really good job and let's not re-invent the wheel.
+As mentioned, Nabo is designed to be simple and integrate-able with other
+components in your application so it does not presume your needs.
+
+If you want routing or templating, you can easily integrate Nabo to Phoenix
+or Plug.
 
 ## Development and issue report
 
