@@ -14,11 +14,9 @@ runtime so it should be deadly fast.
 
 ## Installation
 
-Nabo is still in its early stage so is not available on hex.pm yet.
-
 ```elixir
 def deps do
-  [{:nabo, "~> 0.0.1", github: "qcam/nabo"}]
+  [{:nabo, "~> 0.0.1"}]
 end
 ```
 
@@ -31,7 +29,7 @@ defmodule MyWeb.Repo do
 end
 ```
 
-Note that all blog posts used in Nabo should follow this front matter format.
+All blog posts used in Nabo should follow this format.
 
 ```md
 {
@@ -40,7 +38,7 @@ Note that all blog posts used in Nabo should follow this front matter format.
   "date": "2017-01-01"
 }
 ---
-This is the exceprt of the post in markdown
+This is the excerpt of the post in markdown
 ---
 This is the *body* of the post in markdown
 ```
@@ -72,7 +70,7 @@ Then in your template
   <%= for post <- posts do %>
   <div class="post">
     <h3><%= post.title %></h3>
-    <div class="exceprt"><%= post.exceprt_html %></div>
+    <div class="excerpt"><%= post.excerpt_html %></div>
   </div>
   <% end %>
 </div>
