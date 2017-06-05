@@ -2,6 +2,15 @@ defmodule Nabo.TestRepo do
   use Nabo.Repo, root: "test/fixtures/posts"
 end
 
+defmodule Nabo.CustomCompilerRepo do
+  use Nabo.Repo,
+      root: "test/fixtures/posts",
+      compiler: {
+        Nabo.Compilers.Markdown,
+        markdown: %Earmark.Options{code_class_prefix: "foo-"}
+      }
+end
+
 defmodule Nabo.EmptyTestRepo do
   use Nabo.Repo, root: "/empty"
 end
@@ -26,6 +35,21 @@ defmodule Nabo.RepoTest do
     assert({:error, _} = Nabo.TestRepo.get("foo"))
   end
 
+  test "get/1 with customized compiler" do
+    assert({:ok, post} = Nabo.CustomCompilerRepo.get("post-with-code"))
+    expected = %Nabo.Post{
+      title: "Post with code",
+      slug: "post-with-code",
+      date: ~D[2017-01-01],
+      body: "```elixir\nIO.inspect(1 + 1)\n```",
+      body_html: "<pre><code class=\"elixir foo-elixir\">IO.inspect(1 + 1)</code></pre>\n",
+      excerpt: "",
+      excerpt_html: "",
+      metadata: %{"date" => "2017-01-01", "slug" => "post-with-code", "title" => "Post with code"},
+    }
+    assert(expected == post)
+  end
+
   test "all/1" do
     assert({:ok, posts} = Nabo.TestRepo.all())
     expected = %Nabo.Post{
@@ -47,7 +71,7 @@ defmodule Nabo.RepoTest do
 
   test "availables" do
     availables = Nabo.TestRepo.availables()
-    assert(Enum.count(availables) == 2)
+    assert(Enum.count(availables) == 3)
     assert(Enum.member?(availables, "valid-post"))
     assert(Enum.member?(availables, "valid-post-1"))
   end

@@ -19,11 +19,12 @@ defmodule Nabo.Repo do
   @doc false
   defmacro __using__(options) do
     quote bind_quoted: [options: options], unquote: true do
-      {compiler, _} = Keyword.pop(options, :compiler, Nabo.Compilers.Markdown)
+      {{compiler, compiler_opts}, _} = Keyword.pop(options, :compiler, {Nabo.Compilers.Markdown, []})
       root = Keyword.fetch!(options, :root) |> Path.relative_to_cwd
 
       @root root
       @compiler compiler
+      @compiler_opts compiler_opts
 
       @before_compile unquote(__MODULE__)
     end
@@ -32,10 +33,11 @@ defmodule Nabo.Repo do
   @doc false
   defmacro __before_compile__(env) do
     compiler = Module.get_attribute(env.module, :compiler)
+    compiler_opts = Module.get_attribute(env.module, :compiler_opts)
     root = Module.get_attribute(env.module, :root)
     pattern = "**/*"
     pairs = find_all(root, pattern)
-            |> Enum.map(& compile(compiler, &1))
+            |> Enum.map(& compile(compiler, &1, compiler_opts))
     names = Enum.map(pairs, &elem(&1, 0))
     codes = Enum.map(pairs, &elem(&1, 1))
 
@@ -83,9 +85,9 @@ defmodule Nabo.Repo do
     |> Path.wildcard()
   end
 
-  defp compile(compiler, path) do
+  defp compile(compiler, path, compiler_opts) do
     {identifier, compiled} = File.read!(path)
-                             |> compiler.compile()
+                             |> compiler.compile(compiler_opts)
 
     {identifier, quote do
       @file unquote(path)
