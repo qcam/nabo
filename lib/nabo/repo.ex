@@ -19,7 +19,11 @@ defmodule Nabo.Repo do
   @doc false
   defmacro __using__(options) do
     quote bind_quoted: [options: options], unquote: true do
-      @root Keyword.fetch!(options, :root) |> Path.relative_to_cwd
+      {compiler, _} = Keyword.pop(options, :compiler, Nabo.Compilers.Markdown)
+      root = Keyword.fetch!(options, :root) |> Path.relative_to_cwd
+
+      @root root
+      @compiler compiler
 
       @before_compile unquote(__MODULE__)
     end
@@ -27,10 +31,11 @@ defmodule Nabo.Repo do
 
   @doc false
   defmacro __before_compile__(env) do
+    compiler = Module.get_attribute(env.module, :compiler)
     root = Module.get_attribute(env.module, :root)
     pattern = "**/*"
     pairs = find_all(root, pattern)
-            |> Enum.map(& compile(&1))
+            |> Enum.map(& compile(compiler, &1))
     names = Enum.map(pairs, &elem(&1, 0))
     codes = Enum.map(pairs, &elem(&1, 1))
 
@@ -78,22 +83,16 @@ defmodule Nabo.Repo do
     |> Path.wildcard()
   end
 
-  defp compile(path) do
-    content = File.read!(path)
-    {:ok, post} = Nabo.Post.from_string(content)
-    excerpt_html = Earmark.as_html!(post.excerpt)
-    body_html = Earmark.as_html!(post.body)
-    compiled_body = post
-                    |> Post.put_excerpt_html(excerpt_html)
-                    |> Post.put_body_html(body_html)
-                    |> Macro.escape
+  defp compile(compiler, path) do
+    {identifier, compiled} = File.read!(path)
+                             |> compiler.compile()
 
-    {post.slug, quote do
+    {identifier, quote do
       @file unquote(path)
       @external_resource unquote(path)
 
-      defp _find(unquote(post.slug)) do
-        unquote(compiled_body)
+      defp _find(unquote(identifier)) do
+        unquote(compiled)
       end
     end}
   end
