@@ -2,8 +2,6 @@ defmodule Nabo.Repo do
   @moduledoc """
   Precompiles and provides interface to interact with your posts.
 
-  ## Example
-
       defmodule MyRepo do
         use Nabo.Repo, root: "priv/posts"
       end
@@ -12,6 +10,22 @@ defmodule Nabo.Repo do
       {:ok, post} = MyRepo.get("foo")
       post = MyRepo.get!("foo")
 
+  ## Compiler
+
+  By default Nabo uses `Nabo.Compilers.Markdown` compiler.
+
+  To customize compiler or compiler options, use `:compiler` option.
+
+      defmodule MyRepo do
+        use Nabo.Repo,
+            root: "priv/posts",
+            compiler: {
+              Nabo.Compilers.Markdown,
+              markdown: %Earmark.Options{smartypants: false}
+            }
+      end
+
+  See `Nabo.Compiler` more more information of how to build your own compiler.
   """
 
   alias Nabo.Post

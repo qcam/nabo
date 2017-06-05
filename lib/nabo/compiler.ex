@@ -4,12 +4,22 @@ defmodule Nabo.Compiler do
 
   ## Example
 
-      defmodule Nabo.MyCompiler do
-        def compile(content) do
-          post = MyPost.parse_from_string(content)
+      defmodule MyCompiler do
+        @behaviour Nabo.Compiler
 
-          {post.date
+        def compile(content, options) do
+          post = MyPost.parse_from_string(content)
+          compiled = Macro.escape(post)
+          {post.title, compiled}
         end
+      end
+
+  Then set `MyCompiler` up in your repo.
+
+      defmodule MyRepo do
+        use Nabo.Repo,
+            root: "priv/posts",
+            compiler: {MyCompiler, []}
       end
 
   """

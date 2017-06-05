@@ -6,7 +6,7 @@ defmodule Nabo do
   Phoenix or Plug. It does not include stuff like routing or html generating,
   but only focuses on one thing and does it well: manages your blog posts.
 
-  ## Posts
+  ## Post
 
   Post is the heart of Nabo and is represented as `Nabo.Post` struct.
 
@@ -56,5 +56,15 @@ defmodule Nabo do
       {:ok, post} = MyRepo.get("first-post")
 
   See `Nabo.Repo` for more information.
+
+  ## Compiler
+
+  Compiler is where your posts being compiled.
+
+  Nabo uses `Nabo.Compilers.Markdown` as the default compiler but you're free to have
+  your own options and compilers. See the documentation of `Nabo.Compilers.Markdown`
+  for more options.
+
+  If you want to build your own compiler, see `Nabo.Compiler` for more information.
   """
 end

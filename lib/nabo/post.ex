@@ -48,7 +48,7 @@ defmodule Nabo.Post do
 
   defstruct [:title, :slug, :date, :excerpt, :excerpt_html, :body, :body_html, :metadata]
 
-  @opaque t :: %__MODULE__{}
+  @type t :: %__MODULE__{body: String.t, body_html: String.t, date: Date.t, excerpt: String.t, excerpt_html: String.t, metadata: Map.t, slug: String.t, title: String.t}
 
   @doc """
   Builds struct from markdown content.

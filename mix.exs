@@ -7,12 +7,16 @@ defmodule Nabo.Mixfile do
     [app: :nabo,
      version: @version,
      elixir: "~> 1.4",
+     deps: deps(),
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      description: description(),
      package: package(),
      name: "Nabo",
-     deps: deps()]
+     docs: [source_ref: "v#{@version}",
+            main: "Nabo",
+            canonical: "http://hexdocs.pm/nabo",
+            source_url: "https://github.com/qcam/nabo"]]
   end
 
   def application do

@@ -29,6 +29,7 @@ defmodule Nabo.Metadata do
 
   """
 
+  @typep t() :: __MODULE__.t()
   defstruct [:slug, :title, :date, :extras]
 
   @doc false

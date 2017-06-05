@@ -3,14 +3,24 @@ defmodule Nabo.Compilers.Markdown do
 
   @behaviour Nabo.Compiler
 
-  @doc """
-  Compile a raw post that compliant to Nabo post format into macro.
+  @moduledoc """
+  The default compiler in `Nabo`, for `Nabo.Post` format compliant post.
+
+  `Nabo.Compilers.Markdown` uses `Earmark` as its markdown compiler.
 
   The first element of the returned tuple is the identifier of the post.
   """
+
+  @doc """
+  Compiles a raw content that complies with `Nabo.Post` format into macro.
+
+  ## Options
+
+  * `markdown` - (`Earmark.Options`) options to pass to Earmark markdown parsing function.
+
+  """
   @spec compile(content :: String.t, options :: Keyword.t) :: {identifier :: String.t, compiled :: Marco.t}
   def compile(content, options \\ []) when is_binary(content) do
-
     case Post.from_string(content) do
       {:ok, post} ->
         excerpt_html = parse_markdown(post.excerpt, options)
