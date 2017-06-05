@@ -2,7 +2,7 @@
 
 Dead simple blog engine
 
-[Documentation](https://hexdocs.pm/nabo/0.0.1/Nabo.html).
+[Documentation](https://hexdocs.pm/nabo/).
 
 Nabo is designed to be a simple, fast, extendable blog engine. You can integrate Nabo to any components
 in your application like Phoenix, Plug.
@@ -18,13 +18,25 @@ def deps do
 end
 ```
 
-To start using Nabo, first you need to create your own repo. You can keep your
-posts anywhere in your source code but let's assume they were kept in `priv/_posts`.
+To start using Nabo, first you need to create your own repo. Use this mix task:
+
+```
+mix nabo.gen.repo MyApp.Repo
+```
+
+Nabo assumes your posts are in `priv/posts`, if they are not, you can change the
+`:root` option in the generated repo.
 
 ```elixir
 defmodule MyWeb.Repo do
-  use Nabo.Repo, root: "priv/_posts"
+  use Nabo.Repo, root: "path/to/posts"
 end
+```
+
+Nabo provides `nabo.gen.post` mix task to generate posts.
+
+```
+mix nabo.gen.post my-first-blog-post
 ```
 
 All posts in Nabo should follow this format.
@@ -60,7 +72,7 @@ defmodule MyWeb.PostController do
 end
 ```
 
-Then in your template
+Then in your template.
 
 ```elixir
 # index.html.eex
@@ -133,12 +145,12 @@ That's it, no magic.
 Nabo is not meant to replace Jekyll since Jekyll has done their job really well
 (trust me the previous version of my blog was built with Jekyll). But Nabo takes
 another approach and is designed to integrate with other components in your
-application. So if you want to build a blog with more controlled functions like
-comments or traffic count, Nabo might fit your needs. But if you need a minimal
+application. If you want to build a blog with more controllable functions like
+comments or traffic count, then Nabo might fit your needs. If you need a minimal
 version of static html blog that can play well with Github page, then Jekyll
 would probably be your choice.
 
-> Why Nabo does not support template, router, controller or a server?
+> Why Nabo does not support template, router, controller or server?
 
 As mentioned, Nabo is designed to be simple and integrate-able with other
 components in your application so it does not presume your needs.
