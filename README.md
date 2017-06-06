@@ -1,6 +1,6 @@
 # Nabo
 
-Dead simple blog engine
+Dead simple blog engine.
 
 [Documentation](https://hexdocs.pm/nabo/).
 
@@ -157,6 +157,10 @@ components in your application so it does not presume your needs.
 
 If you want routing or templating, you can easily integrate Nabo to Phoenix
 or Plug.
+
+## Websites built with Nabo
+
+* [hqc.io](https://hqc.io)
 
 ## Development and issue report
 
