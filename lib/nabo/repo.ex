@@ -75,12 +75,13 @@ defmodule Nabo.Repo do
       end
 
       def all do
-        {
-          :ok,
-          availables()
-          |> Stream.map(& Task.async(fn -> get!(&1) end))
-          |> Enum.map(&Task.await/1)
-        }
+        availables()
+        |> Stream.map(& Task.async(fn -> get!(&1) end))
+        |> Enum.map(&Task.await/1)
+      end
+
+      def order_by_date(posts) do
+        Enum.sort(posts, & Date.compare(&1.date, &2.date) == :gt)
       end
 
       def availables do
@@ -138,10 +139,20 @@ defmodule Nabo.Repo do
 
   ## Example
 
-      {:ok, posts} = MyRepo.all()
+      posts = MyRepo.all()
 
   """
   @callback all() :: [Nabo.Post.t]
+
+  @doc """
+  Order posts by date
+
+  ## Example
+
+      posts = MyRepo.all() |> MyRepo.order_by_date()
+
+  """
+  @callback order_by_date(posts :: [Nabo.Post.t]) :: [Nabo.Post.t]
 
   @doc """
   Fetches all availables post names in the repo.
