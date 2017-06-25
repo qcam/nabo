@@ -30,7 +30,7 @@ defmodule Nabo.Metadata do
   """
 
   @typep t() :: __MODULE__.t()
-  defstruct [:slug, :title, :date, :extras]
+  defstruct [:slug, :title, :date, :draft?, :extras]
 
   @doc false
   def from_string(meta_string) do
@@ -39,6 +39,7 @@ defmodule Nabo.Metadata do
         with {:ok, title} <- Map.fetch(metadata, "title"),
              {:ok, slug} <- Map.fetch(metadata, "slug"),
              {:ok, date} <- Map.fetch(metadata, "date"),
+             draft? <- Map.get(metadata, "draft", false),
              date <- Date.from_iso8601!(date) do
           {
             :ok,
@@ -46,6 +47,7 @@ defmodule Nabo.Metadata do
               title: title,
               slug: slug,
               date: date,
+              draft?: draft?,
               extras: metadata,
             },
           }

@@ -24,6 +24,7 @@ defmodule Nabo.RepoTest do
       title: "Valid Post",
       slug: "valid-post",
       date: ~D[2017-01-01],
+      draft?: false,
       body: "### Welcome!\n\nThis is your first blog post built with *Nabo blog engine*",
       body_html: "<h3>Welcome!</h3>\n<p>This is your first blog post built with <em>Nabo blog engine</em></p>\n",
       excerpt: "Welcome to your first Nabo Post",
@@ -41,6 +42,7 @@ defmodule Nabo.RepoTest do
       title: "Post with code",
       slug: "post-with-code",
       date: ~D[2017-01-02],
+      draft?: false,
       body: "```elixir\nIO.inspect(1 + 1)\n```",
       body_html: "<pre><code class=\"elixir foo-elixir\">IO.inspect(1 + 1)</code></pre>\n",
       excerpt: "",
@@ -56,6 +58,7 @@ defmodule Nabo.RepoTest do
       title: "Valid Post",
       slug: "valid-post",
       date: ~D[2017-01-01],
+      draft?: false,
       body: "### Welcome!\n\nThis is your first blog post built with *Nabo blog engine*",
       body_html: "<h3>Welcome!</h3>\n<p>This is your first blog post built with <em>Nabo blog engine</em></p>\n",
       excerpt: "Welcome to your first Nabo Post",
@@ -71,14 +74,14 @@ defmodule Nabo.RepoTest do
 
   test "availables" do
     availables = Nabo.TestRepo.availables()
-    assert(Enum.count(availables) == 4)
+    assert(Enum.count(availables) == 5)
     assert(Enum.member?(availables, "valid-post"))
     assert(Enum.member?(availables, "valid-post-1"))
   end
 
   test "all_by_date" do
     posts = Nabo.TestRepo.all() |> Nabo.TestRepo.order_by_date()
-    expected = ["post-with-code", "valid-post", "valid-post-1", "old-post"]
+    expected = ["draft-post", "post-with-code", "valid-post", "valid-post-1", "old-post"]
     assert(Enum.map(posts, & &1.slug) == expected)
   end
 end

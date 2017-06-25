@@ -9,10 +9,28 @@ defmodule Nabo.MetadataTest do
       title: "Hello",
       slug: "hello",
       date: date,
+      draft?: false,
       extras: %{
         "title" => "Hello",
         "slug" => "hello",
         "date" => "2017-01-01",
+      },
+    }
+    assert(expected == metadata)
+
+    string = ~s({"title":"Hello","draft":true,"slug":"hello","date":"2017-01-01"})
+    assert({:ok, metadata = %Nabo.Metadata{}} = Nabo.Metadata.from_string(string))
+    {:ok, date} = Date.new(2017, 1, 1)
+    expected = %Nabo.Metadata{
+      title: "Hello",
+      slug: "hello",
+      date: date,
+      draft?: true,
+      extras: %{
+        "title" => "Hello",
+        "slug" => "hello",
+        "date" => "2017-01-01",
+        "draft" => true,
       },
     }
     assert(expected == metadata)

@@ -15,6 +15,7 @@ defmodule Nabo.PostTest do
       title: "Hello",
       slug: "hello",
       date: date,
+      draft?: false,
       excerpt: "Welcome to your first Nabo post",
       body: "This is the content of your first Nabo post",
       metadata: %{

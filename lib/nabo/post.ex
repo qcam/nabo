@@ -46,9 +46,19 @@ defmodule Nabo.Post do
 
   alias Nabo.FrontMatter
 
-  defstruct [:title, :slug, :date, :excerpt, :excerpt_html, :body, :body_html, :metadata]
+  defstruct [:title, :slug, :date, :draft?, :excerpt, :excerpt_html, :body, :body_html, :metadata]
 
-  @type t :: %__MODULE__{body: String.t, body_html: String.t, date: Date.t, excerpt: String.t, excerpt_html: String.t, metadata: Map.t, slug: String.t, title: String.t}
+  @type t :: %__MODULE__{
+    body: String.t,
+    body_html: String.t,
+    date: Date.t,
+    draft?: boolean,
+    excerpt: String.t,
+    excerpt_html: String.t,
+    metadata: Map.t,
+    slug: String.t,
+    title: String.t,
+  }
 
   @doc """
   Builds struct from markdown content.
@@ -80,6 +90,7 @@ defmodule Nabo.Post do
             title: meta.title,
             slug: meta.slug,
             date: meta.date,
+            draft?: meta.draft?,
             excerpt: excerpt,
             body: body,
             metadata: meta.extras,
