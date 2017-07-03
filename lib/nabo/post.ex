@@ -46,13 +46,14 @@ defmodule Nabo.Post do
 
   alias Nabo.FrontMatter
 
-  defstruct [:title, :slug, :date, :draft?, :excerpt, :excerpt_html, :body, :body_html, :metadata]
+  defstruct [:title, :slug, :date, :draft?, :excerpt, :excerpt_html, :body, :body_html, :metadata, :reading_time]
 
   @type t :: %__MODULE__{
     body: String.t,
     body_html: String.t,
     date: Date.t,
     draft?: boolean,
+    reading_time: Float.t,
     excerpt: String.t,
     excerpt_html: String.t,
     metadata: Map.t,
@@ -84,6 +85,8 @@ defmodule Nabo.Post do
   def from_string(string) do
     case FrontMatter.from_string(string) do
       {:ok, {meta, excerpt, body}} ->
+        reading_time = compute_reading_time(body)
+
         {
           :ok,
           %__MODULE__{
@@ -91,6 +94,7 @@ defmodule Nabo.Post do
             slug: meta.slug,
             date: meta.date,
             draft?: meta.draft?,
+            reading_time: reading_time,
             excerpt: excerpt,
             body: body,
             metadata: meta.extras,
@@ -114,5 +118,17 @@ defmodule Nabo.Post do
   @spec put_body_html(post :: __MODULE__.t, body_html :: String.t) :: Nabo.Post.t
   def put_body_html(%__MODULE__{} = post, body_html) do
     %__MODULE__{post | body_html: body_html}
+  end
+
+  @doc """
+  Computes reading time of the given post body string
+  """
+  @spec compute_reading_time(body :: String.t) :: Float.t
+  def compute_reading_time(body) when is_binary(body) do
+    body
+    |> String.split(" ")
+    |> Enum.count
+    |> Kernel./(275)
+    |> Float.round(2)
   end
 end
