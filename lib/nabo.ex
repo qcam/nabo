@@ -17,7 +17,7 @@ defmodule Nabo do
       ---
       post excerpt (Markdown, optional)
       ---
-      post body (JSON, mandatory)
+      post body (Markdown, mandatory)
 
   ### Example
 
