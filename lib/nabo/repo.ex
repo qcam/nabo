@@ -81,7 +81,7 @@ defmodule Nabo.Repo do
       end
 
       def order_by_date(posts) do
-        Enum.sort(posts, & Date.compare(&1.date, &2.date) == :gt)
+        Enum.sort(posts, & DateTime.compare(&1.datetime, &2.datetime) == :gt)
       end
 
       def availables do

@@ -19,11 +19,12 @@ defmodule Nabo.RepoTest do
   use ExUnit.Case, async: true
 
   test "get/1" do
+    {:ok, datetime, 0} = DateTime.from_iso8601("2017-01-01T00:00:00Z")
     assert({:ok, post} = Nabo.TestRepo.get("valid-post"))
     expected = %Nabo.Post{
       title: "Valid Post",
       slug: "valid-post",
-      date: ~D[2017-01-01],
+      datetime: datetime,
       draft?: false,
       reading_time: 0.04,
       body: "### Welcome!\n\nThis is your first blog post built with *Nabo blog engine*",
@@ -38,11 +39,12 @@ defmodule Nabo.RepoTest do
   end
 
   test "get/1 with customized compiler" do
+    {:ok, datetime, 0} = DateTime.from_iso8601("2017-01-02T00:00:00Z")
     assert({:ok, post} = Nabo.CustomCompilerRepo.get("post-with-code"))
     expected = %Nabo.Post{
       title: "Post with code",
       slug: "post-with-code",
-      date: ~D[2017-01-02],
+      datetime: datetime,
       draft?: false,
       reading_time: 0.01,
       body: "```elixir\nIO.inspect(1 + 1)\n```",
@@ -55,11 +57,12 @@ defmodule Nabo.RepoTest do
   end
 
   test "all/1" do
+    {:ok, datetime, 0} = DateTime.from_iso8601("2017-01-01T00:00:00Z")
     posts = Nabo.TestRepo.all()
     expected = %Nabo.Post{
       title: "Valid Post",
       slug: "valid-post",
-      date: ~D[2017-01-01],
+      datetime: datetime,
       draft?: false,
       reading_time: 0.04,
       body: "### Welcome!\n\nThis is your first blog post built with *Nabo blog engine*",

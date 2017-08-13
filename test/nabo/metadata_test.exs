@@ -4,11 +4,11 @@ defmodule Nabo.MetadataTest do
   test "from_string/1 with meta string" do
     string = ~s({"title":"Hello","slug":"hello","date":"2017-01-01"})
     assert({:ok, metadata = %Nabo.Metadata{}} = Nabo.Metadata.from_string(string))
-    {:ok, date} = Date.new(2017, 1, 1)
+    {:ok, datetime, 0} = DateTime.from_iso8601("2017-01-01T00:00:00Z")
     expected = %Nabo.Metadata{
       title: "Hello",
       slug: "hello",
-      date: date,
+      datetime: datetime,
       draft?: false,
       extras: %{
         "title" => "Hello",
@@ -20,11 +20,11 @@ defmodule Nabo.MetadataTest do
 
     string = ~s({"title":"Hello","draft":true,"slug":"hello","date":"2017-01-01"})
     assert({:ok, metadata = %Nabo.Metadata{}} = Nabo.Metadata.from_string(string))
-    {:ok, date} = Date.new(2017, 1, 1)
+    {:ok, datetime, 0} = DateTime.from_iso8601("2017-01-01T00:00:00Z")
     expected = %Nabo.Metadata{
       title: "Hello",
       slug: "hello",
-      date: date,
+      datetime: datetime,
       draft?: true,
       extras: %{
         "title" => "Hello",

@@ -20,7 +20,7 @@ defmodule Nabo.Mixfile do
   end
 
   def application do
-    [application: [:logger]]
+    [applications: [:logger]]
   end
 
   defp deps do
