@@ -11,7 +11,7 @@ defmodule Nabo.Metadata do
       {
         "title": "Nabo Post",
         "slug": "First Nabo post",
-        "date": "2017-01-01"
+        "datetime": "2017-01-01T00:00:00Z"
       }
 
   You can have your own customized metadata and they will be accessible in `extras`.
@@ -20,7 +20,7 @@ defmodule Nabo.Metadata do
       {
         "title": "Nabo Post",
         "slug": "First Nabo post",
-        "date": "2017-01-01",
+        "datetime": "2017-01-01T00:00:00Z",
         "tags": ["foo", "bar"]
       }
       )

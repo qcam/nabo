@@ -20,7 +20,7 @@ defmodule Nabo.Post do
       {
         "title": "Hello World",
         "slug": "hello-world",
-        "date": "2017-01-01"
+        "datetime": "2017-01-01T00:00:00Z"
       }
       ---
       Welcome to my blog!
@@ -35,7 +35,7 @@ defmodule Nabo.Post do
       {
         "title": "Hello World",
         "slug": "hello-world",
-        "date": "2017-01-01"
+        "datetime": "2017-01-01T00:00:00Z"
       }
       ---
       ### Hello there!
@@ -70,7 +70,7 @@ defmodule Nabo.Post do
         {
           "title": "Hello World",
           "slug": "hello-world",
-          "date": "2017-01-01"
+          "datetime": "2017-01-01T00:00:00Z"
         }
         ---
         Welcome to my blog!
