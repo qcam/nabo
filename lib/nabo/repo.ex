@@ -80,7 +80,7 @@ defmodule Nabo.Repo do
         |> Enum.map(&Task.await/1)
       end
 
-      def order_by_date(posts) do
+      def order_by_datetime(posts) do
         Enum.sort(posts, & DateTime.compare(&1.datetime, &2.datetime) == :gt)
       end
 

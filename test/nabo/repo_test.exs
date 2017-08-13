@@ -86,7 +86,7 @@ defmodule Nabo.RepoTest do
   end
 
   test "all_by_date" do
-    posts = Nabo.TestRepo.all() |> Nabo.TestRepo.order_by_date()
+    posts = Nabo.TestRepo.all() |> Nabo.TestRepo.order_by_datetime()
     expected = ["draft-post", "post-with-code", "valid-post", "valid-post-1", "old-post"]
     assert(Enum.map(posts, & &1.slug) == expected)
   end
