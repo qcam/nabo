@@ -29,7 +29,7 @@ defmodule Mix.Tasks.Nabo.Gen.Post do
     end
   end
 
-  def format_datetime(datetime) do
+  defp format_datetime(datetime) do
     [
       datetime.year,
       pad_string(datetime.month),
