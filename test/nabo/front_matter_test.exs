@@ -4,7 +4,7 @@ defmodule Nabo.FrontMatterTest do
   test "from_string/1" do
     string =
       ~s(
-         {"title":"Hello","slug":"hello","date":"2017-01-01"}
+         {"title":"Hello","slug":"hello","datetime":"2017-01-01T00:00:00Z"}
          ---
          Welcome to your first Nabo post
          ---
@@ -16,7 +16,7 @@ defmodule Nabo.FrontMatterTest do
 
     string =
       ~s(
-         {"title":"Hello","slug":"hello","date":"2017-01-01"}
+         {"title":"Hello","slug":"hello","datetime":"2017-01-01T00:00:00Z"}
          ---
          This is the content of your first Nabo post
        )

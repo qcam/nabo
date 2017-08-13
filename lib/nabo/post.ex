@@ -20,7 +20,7 @@ defmodule Nabo.Post do
       {
         "title": "Hello World",
         "slug": "hello-world",
-        "date": "2017-01-01"
+        "datetime": "2017-01-01T00:00:00Z"
       }
       ---
       Welcome to my blog!
@@ -35,7 +35,7 @@ defmodule Nabo.Post do
       {
         "title": "Hello World",
         "slug": "hello-world",
-        "date": "2017-01-01"
+        "datetime": "2017-01-01T00:00:00Z"
       }
       ---
       ### Hello there!
@@ -46,12 +46,12 @@ defmodule Nabo.Post do
 
   alias Nabo.FrontMatter
 
-  defstruct [:title, :slug, :date, :draft?, :excerpt, :excerpt_html, :body, :body_html, :metadata, :reading_time]
+  defstruct [:title, :slug, :datetime, :draft?, :excerpt, :excerpt_html, :body, :body_html, :metadata, :reading_time]
 
   @type t :: %__MODULE__{
     body: String.t,
     body_html: String.t,
-    date: Date.t,
+    datetime: DateTime.t,
     draft?: boolean,
     reading_time: Float.t,
     excerpt: String.t,
@@ -70,7 +70,7 @@ defmodule Nabo.Post do
         {
           "title": "Hello World",
           "slug": "hello-world",
-          "date": "2017-01-01"
+          "datetime": "2017-01-01T00:00:00Z"
         }
         ---
         Welcome to my blog!
@@ -92,7 +92,7 @@ defmodule Nabo.Post do
           %__MODULE__{
             title: meta.title,
             slug: meta.slug,
-            date: meta.date,
+            datetime: meta.datetime,
             draft?: meta.draft?,
             reading_time: reading_time,
             excerpt: excerpt,

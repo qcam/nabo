@@ -1,7 +1,7 @@
 {
   "title": "Post with code",
   "slug": "post-with-code",
-  "date": "2017-01-02"
+  "datetime": "2017-01-02T00:00:00Z"
 }
 ---
 ```elixir

@@ -45,7 +45,7 @@ All posts in Nabo should follow this format.
 {
   "title": "Welcome to Nabo",
   "slug": "welcome",
-  "date": "2017-01-01"
+  "datetime": "2017-01-01T00:00:00Z"
 }
 ---
 This is the excerpt of the post in markdown

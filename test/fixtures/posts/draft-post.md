@@ -1,7 +1,7 @@
 {
   "title": "Draft-post",
   "slug": "draft-post",
-  "date": "2017-01-02",
+  "datetime": "2017-01-02T00:00:00Z",
   "draft": true
 }
 ---

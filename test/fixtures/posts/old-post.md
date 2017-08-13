@@ -1,7 +1,7 @@
 {
   "title": "Old post",
   "slug": "old-post",
-  "date": "2016-01-03"
+  "datetime": "2016-01-03T00:00:00Z"
 }
 ---
 ```elixir
