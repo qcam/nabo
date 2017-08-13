@@ -31,7 +31,7 @@ defmodule Nabo.RepoTest do
       body_html: "<h3>Welcome!</h3>\n<p>This is your first blog post built with <em>Nabo blog engine</em></p>\n",
       excerpt: "Welcome to your first Nabo Post",
       excerpt_html: "<p>Welcome to your first Nabo Post</p>\n",
-      metadata: %{"date" => "2017-01-01", "slug" => "valid-post", "title" => "Valid Post"},
+      metadata: %{"datetime" => "2017-01-01T00:00:00Z", "slug" => "valid-post", "title" => "Valid Post"},
     }
     assert(expected == post)
 
@@ -51,7 +51,7 @@ defmodule Nabo.RepoTest do
       body_html: "<pre><code class=\"elixir foo-elixir\">IO.inspect(1 + 1)</code></pre>\n",
       excerpt: "",
       excerpt_html: "",
-      metadata: %{"date" => "2017-01-02", "slug" => "post-with-code", "title" => "Post with code"},
+      metadata: %{"datetime" => "2017-01-02T00:00:00Z", "slug" => "post-with-code", "title" => "Post with code"},
     }
     assert(expected == post)
   end
@@ -69,7 +69,7 @@ defmodule Nabo.RepoTest do
       body_html: "<h3>Welcome!</h3>\n<p>This is your first blog post built with <em>Nabo blog engine</em></p>\n",
       excerpt: "Welcome to your first Nabo Post",
       excerpt_html: "<p>Welcome to your first Nabo Post</p>\n",
-      metadata: %{"date" => "2017-01-01", "slug" => "valid-post", "title" => "Valid Post"},
+      metadata: %{"datetime" => "2017-01-01T00:00:00Z", "slug" => "valid-post", "title" => "Valid Post"},
     }
     assert(Enum.member?(posts, expected))
   end
