@@ -6,7 +6,7 @@ defmodule Nabo.Repo do
         use Nabo.Repo, root: "priv/posts"
       end
 
-      {:ok, posts} = MyRepo.all
+      posts = MyRepo.all
       {:ok, post} = MyRepo.get("foo")
       post = MyRepo.get!("foo")
 

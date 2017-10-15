@@ -49,7 +49,7 @@ defmodule Nabo do
 
   To get all posts.
 
-      {:ok, posts} = MyRepo.all()
+      posts = MyRepo.all()
 
   To get a post by its slug.
 

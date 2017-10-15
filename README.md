@@ -2,9 +2,10 @@
 
 Dead simple blog engine.
 
-[Documentation](https://hexdocs.pm/nabo/).
+See [documentation](https://hexdocs.pm/nabo/) and
+[example](https://github.com/qcam/nabo_example).
 
-Nabo is designed to be a simple, fast, extendable blog engine. You can integrate Nabo to any components
+Nabo is designed to be a simple, fast, extendable blog engine. You can integrate Nabo to any component
 in your application like Phoenix, Plug.
 
 It does not include routers or html generators, but focuses on doing one thing and
@@ -60,11 +61,11 @@ defmodule MyWeb.PostController do
   use MyWeb.Web, :controller
 
   def index(conn, _params) do
-    {:ok, posts} = MyWeb.Repo.all()
+    posts = MyWeb.Repo.all()
     render conn, "index.html", posts: posts
   end
 
-  def show(conn, %{"slug" => slug}) do
+  def show(conn, %{"id" => slug}) do
     {:ok, post} = MyWeb.Repo.get(slug)
     #or post = MyWeb.Repo.get!(slug) This will raise if no post was found
     render conn, "show.html", post: post
@@ -90,7 +91,7 @@ Then in your template.
 # show.html.eex
 <div class="post">
   <h1><%= post.title %></h1>
-  <div class="body"><%= post.body %></div>
+  <div class="body"><%= post.body_html %></div>
 </div>
 ```
 
@@ -105,7 +106,7 @@ defmodule MyWeb.Router do
   plug :dispatch
 
   get "/posts" do
-    {:ok, posts} = MyWeb.Repo.all()
+    posts = MyWeb.Repo.all()
 
     body =
       posts
@@ -160,7 +161,8 @@ or Plug.
 
 ## Websites built with Nabo
 
-* [hqc.io](https://hqc.io)
+* [hqc.io](https://hqc.io).
+* [quan-cam.com](https://quan-cam.com).
 
 ## Development and issue report
 

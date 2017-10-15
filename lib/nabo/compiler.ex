@@ -10,7 +10,7 @@ defmodule Nabo.Compiler do
         def compile(content, options) do
           post = MyPost.parse_from_string(content)
           compiled = Macro.escape(post)
-          {post.title, compiled}
+          {post.slug, compiled}
         end
       end
 
