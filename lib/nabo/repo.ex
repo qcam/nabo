@@ -153,7 +153,7 @@ defmodule Nabo.Repo do
   @callback all() :: [Nabo.Post.t]
 
   @doc """
-  Order posts by date
+  Order posts by date.
 
   ## Example
 
@@ -161,6 +161,26 @@ defmodule Nabo.Repo do
 
   """
   @callback order_by_date(posts :: [Nabo.Post.t]) :: [Nabo.Post.t]
+
+  @doc """
+  Exclude draft posts.
+
+  ## Example
+
+      posts = MyRepo.all() |> MyRepo.exclude_draft()
+
+  """
+  @callback exclude_draft(posts :: [Nabo.Post.t]) :: [Nabo.Post.t]
+
+  @doc """
+  Filter only posts published before a specified datetime.
+
+  ## Example
+
+      posts = MyRepo.all() |> MyRepo.filter_published()
+
+  """
+  @callback filter_published(posts :: [Nabo.Post.t], datetime :: DateTime.t) :: [Nabo.Post.t]
 
   @doc """
   Fetches all availables post names in the repo.
