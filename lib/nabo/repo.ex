@@ -84,6 +84,14 @@ defmodule Nabo.Repo do
         Enum.sort(posts, & DateTime.compare(&1.datetime, &2.datetime) == :gt)
       end
 
+      def exclude_draft(posts) do
+        Enum.filter(posts, & !&1.draft?)
+      end
+
+      def filter_published(posts, datetime \\ DateTime.utc_now) do
+        Enum.filter(posts, & DateTime.compare(&1.datetime, datetime) == :lt)
+      end
+
       def availables do
         unquote(names)
       end
