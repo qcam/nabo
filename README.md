@@ -15,7 +15,7 @@ does it well: manages your blog posts.
 
 ```elixir
 def deps do
-  [{:nabo, "~> 0.0.1"}]
+  [{:nabo, "~> 0.2.1"}]
 end
 ```
 
