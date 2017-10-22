@@ -76,8 +76,8 @@ defmodule Nabo.Repo do
 
       def all do
         availables()
-        |> Stream.map(& Task.async(fn -> get!(&1) end))
-        |> Enum.map(&Task.await/1)
+        |> Enum.map(& Task.async(fn -> get!(&1) end))
+        |> Enum.map(& Task.await/1)
       end
 
       def order_by_datetime(posts) do
