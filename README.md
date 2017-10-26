@@ -161,8 +161,8 @@ or Plug.
 
 ## Websites built with Nabo
 
-* [hqc.io](https://hqc.io).
-* [quan-cam.com](https://quan-cam.com).
+* [hqc.io](https://hqc.io)
+* [quan-cam.com](https://quan-cam.com)
 
 ## Development and issue report
 
