@@ -36,7 +36,7 @@ defmodule Nabo.Metadata do
 
   @doc false
   def from_string(meta_string) do
-    case Poison.decode(meta_string) do
+    case Jason.decode(meta_string) do
       {:ok, metadata} ->
         with {:ok, title} <- Map.fetch(metadata, "title"),
              {:ok, slug} <- Map.fetch(metadata, "slug"),
