@@ -25,7 +25,7 @@ defmodule Mix.Tasks.Nabo.Gen.Post do
 
     case OptionParser.parse(args, switches: switches, aliases: aliases) do
       {options, [slug], _invalid} ->
-        root_path = Keyword.get(options, :root, "priv/posts/")
+        root_path = Keyword.get(options, :path, "priv/posts/")
         datetime = DateTime.utc_now()
         path = Path.relative_to(root_path, Mix.Project.app_path)
         file = Path.join(path, "#{format_datetime(datetime)}_#{slug}.md")
