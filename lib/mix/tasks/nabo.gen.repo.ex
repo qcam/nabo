@@ -23,6 +23,7 @@ defmodule Mix.Tasks.Nabo.Gen.Repo do
 
         create_directory(Path.dirname(file))
         create_file(file, repo_template(mod: repo))
+
       _ ->
         Mix.raise "expected nabo.gen.repo to receive repo name, " <>
                   "got: #{inspect Enum.join(args, " ")}"
