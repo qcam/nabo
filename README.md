@@ -2,9 +2,6 @@
 
 Dead simple blog engine written in Elixir.
 
-See [documentation](https://hexdocs.pm/nabo/) and
-[example](https://github.com/qcam/nabo_example).
-
 Nabo is designed to be a simple, fast, extendable blog engine. You can integrate Nabo to any component
 in your application like Phoenix, Plug.
 
@@ -13,11 +10,27 @@ does it well: manages your blog posts.
 
 ## Installation
 
+Add `:nabo` to your `mix.exs`.
+
+By default Nabo uses [Jason](https://github.com/michalmuskala/jason/) and
+[Earmark](https://github.com/pragdave/earmark) for its JSON and Markdown
+parsers.
+
 ```elixir
-def deps do
-  [{:nabo, "~> 0.2.1"}]
+def deps() do
+  [
+    {:nabo, "~> 1.0.0"},
+    {:jason, "~> 1.0.0"}, # optional
+    {:earmark, "~> 1.2.4"}, # optional
+  ]
 end
 ```
+
+## Documentation
+
+Full documentation can be found on [HexDocs](https://hexdocs.pm/nabo/) and you can view an example of how to integrate Nabo to Phoenix [here](https://github.com/qcam/nabo_example).
+
+## Getting started
 
 To start using Nabo, first you need to create your own repo. Use this mix task:
 
@@ -133,12 +146,44 @@ defmodule MyWeb.Router do
 end
 ```
 
+### Extending Nabo
+
+By default Nabo uses JSON for post metadata and Markdown for post excerpt and
+body, but if you prefer them in other format, you are encourage to write your
+own parsers.
+
+```elixir
+defmodule MyBBCodeParser do
+  @behaviour Nabo.Parser
+
+  def parse(binary, options) do
+    BBCode.to_html(binary, options)
+  end
+end
+```
+
+Then configure your parser to the repo.
+
+```elixir
+defmodule MyRepo do
+  use Nabo.Repo,
+      root: "path/to/posts",
+      compiler: [
+        body_parser: {MyBBCodeParser, []}
+      ]
+end
+```
+
+And that's just it!
+
+See the [documentation](https://hexdocs.pm/nabo) for more `Nabo.Repo` options.
+
 ## Q&A
 
 > How does Nabo work?
 
 Nabo parses all posts in the configured repo in **compile-time**, keeps them in the module, and returns
-them when you ask in run-time.
+them when you ask in **run-time**.
 
 > Why this post engine does not support generating static html like Jekyll and
 > such?
@@ -158,6 +203,15 @@ components in your application so it does not presume your needs.
 
 If you want routing or templating, you can easily integrate Nabo to Phoenix
 or Plug.
+
+> How customizable and extendable is Nabo?
+
+Nabo uses JSON for metadata and Markdown for post excerpt and body by default,
+that is quite an easy decision. But they are **optional**.
+
+You can control the format of all the three components mentioned above, even the
+delimiter between them. Nothing is going to stop you to have your own XML metadata,
+Markdown for excerpt, and BBCode for post body.
 
 ## Websites built with Nabo
 
