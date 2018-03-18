@@ -1,6 +1,6 @@
 # Nabo
 
-Dead simple blog engine.
+Dead simple blog engine written in Elixir.
 
 See [documentation](https://hexdocs.pm/nabo/) and
 [example](https://github.com/qcam/nabo_example).
@@ -137,8 +137,8 @@ end
 
 > How does Nabo work?
 
-Nabo pre-compiles all posts in the configured repo and delivers it when you ask.
-That's it, no magic.
+Nabo parses all posts in the configured repo in **compile-time**, keeps them in the module, and returns
+them when you ask in run-time.
 
 > Why this post engine does not support generating static html like Jekyll and
 > such?

@@ -10,22 +10,34 @@ defmodule Nabo.Repo do
       {:ok, post} = MyRepo.get("foo")
       post = MyRepo.get!("foo")
 
-  ## Compiler
+  Can be configured with:
 
-  By default Nabo uses `Nabo.Compilers.Markdown` compiler.
+  ```
+  defmodule MyRepo do
+    use Nabo.Repo,
+        root: "priv/posts",
+        split_pattern: "<<--------->>",
+        compiler: [
+          log_level: :warn,
+          front_parser: {MyJSONParser, []},
+          excerpt_parser: {MyExcerptParser, []},
+          body_parser: {Nabo.Parser.Markdown, %Earmark.Options{smartypants: false}}
+        ]
+  end
+  ```
 
-  To customize compiler or compiler options, use `:compiler` option.
+  * `:root` - the path to posts.
+  * `:split_pattern` - the delimeter that separates front-matter, excerpt and post body. This will be passed
+    as the second argument in `String.split/3`.
+  * `:compiler` - the compiler options, includes of four sub-options. See `Nabo.Parser` for instructions of how to implement a parser.
+    * `:log_level` - the error log level in compile time, use `false` to disable logging completely. Defaults to `:warn`.
+    * `:front_parser` - the options for parsing front matter, in `{parser_module, parser_options}` format.
+      Parser options will be passed to `parse/2` function in parser module. Defaults to `{Nabo.Parser.Front, []}`
+    * `:excerpt_parser` - the options for parsing post excerpt, in `{parser_module, parser_options}` format.
+      Parser options will be passed to `parse/2` function in parser module. Defaults to `{Nabo.Parser.Markdown, []}`
+    * `:body_parser` - the options for parsing post body, in `{parser_module, parser_options}` format.
+      Parser options will be passed to `parse/2` function in parser module. Defaults to `{Nabo.Parser.Markdown, []}`
 
-      defmodule MyRepo do
-        use Nabo.Repo,
-            root: "priv/posts",
-            compiler: {
-              Nabo.Compilers.Markdown,
-              markdown: %Earmark.Options{smartypants: false}
-            }
-      end
-
-  See `Nabo.Compiler` more more information of how to build your own compiler.
   """
 
   require Logger

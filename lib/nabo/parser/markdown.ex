@@ -1,4 +1,6 @@
 defmodule Nabo.Parser.Markdown do
+  @moduledoc false
+
   @behaviour Nabo.Parser
 
   def parse(data, options) do

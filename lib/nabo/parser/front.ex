@@ -1,4 +1,6 @@
 defmodule Nabo.Parser.Front do
+  @moduledoc false
+
   @behaviour Nabo.Parser
 
   alias Nabo.Metadata
