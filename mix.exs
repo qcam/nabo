@@ -25,8 +25,8 @@ defmodule Nabo.Mixfile do
 
   defp deps do
     [
-      {:earmark, "~> 1.2.3"},
-      {:jason, "~> 1.0.0"},
+      {:earmark, "~> 1.2.3", optional: true},
+      {:jason, "~> 1.0.0", optional: true},
       {:ex_doc, ">= 0.0.0", only: :dev},
     ]
   end
