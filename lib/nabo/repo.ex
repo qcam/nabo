@@ -16,8 +16,8 @@ defmodule Nabo.Repo do
   defmodule MyRepo do
     use Nabo.Repo,
         root: "priv/posts",
-        split_pattern: "<<--------->>",
         compiler: [
+          split_pattern: "<<--------->>",
           log_level: :warn,
           front_parser: {MyJSONParser, []},
           excerpt_parser: {MyExcerptParser, []},
@@ -27,9 +27,9 @@ defmodule Nabo.Repo do
   ```
 
   * `:root` - the path to posts.
-  * `:split_pattern` - the delimeter that separates front-matter, excerpt and post body. This will be passed
-    as the second argument in `String.split/3`.
   * `:compiler` - the compiler options, includes of four sub-options. See `Nabo.Parser` for instructions of how to implement a parser.
+    * `:split_pattern` - the delimeter that separates front-matter, excerpt and post body. This will be passed
+      as the second argument in `String.split/3`.
     * `:log_level` - the error log level in compile time, use `false` to disable logging completely. Defaults to `:warn`.
     * `:front_parser` - the options for parsing front matter, in `{parser_module, parser_options}` format.
       Parser options will be passed to `parse/2` function in parser module. Defaults to `{Nabo.Parser.Front, []}`
