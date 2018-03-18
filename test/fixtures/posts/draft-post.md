@@ -1,10 +1,12 @@
 {
-  "title": "Draft-post",
+  "title": "Draft Post",
   "slug": "draft-post",
-  "datetime": "2017-01-02T00:00:00Z",
+  "datetime": "2017-01-01T00:00:00Z",
   "draft": true
 }
 ---
-```elixir
-IO.inspect(1 + 1)
-```
+This is the a draft post
+---
+### Welcome!
+
+This is your first blog post built with *Nabo blog engine*.

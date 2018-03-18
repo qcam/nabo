@@ -44,9 +44,20 @@ defmodule Nabo.Post do
 
   """
 
-  alias Nabo.FrontMatter
+  alias Nabo.Metadata
 
-  defstruct [:title, :slug, :datetime, :draft?, :excerpt, :excerpt_html, :body, :body_html, :metadata, :reading_time]
+  defstruct [
+    :title,
+    :slug,
+    :datetime,
+    :draft?,
+    :excerpt,
+    :excerpt_html,
+    :body,
+    :body_html,
+    :metadata,
+    :reading_time
+  ]
 
   @type t :: %__MODULE__{
     body: String.t,
@@ -61,74 +72,47 @@ defmodule Nabo.Post do
     title: String.t,
   }
 
-  @doc """
-  Builds struct from markdown content.
+  @doc false
 
-  ## Example
-
-      string = ~s(
-        {
-          "title": "Hello World",
-          "slug": "hello-world",
-          "datetime": "2017-01-01T00:00:00Z"
-        }
-        ---
-        Welcome to my blog!
-        ---
-        ### Hello there!
-
-        This is the first post in my blog.
-      )
-      {:ok, post} = Nabo.Post.from(string)
-  """
-  @spec from_string(string :: String.t) :: {:ok, Nabo.Post.t} | {:error, any}
-  def from_string(string) do
-    case FrontMatter.from_string(string) do
-      {:ok, {meta, excerpt, body}} ->
-        reading_time = compute_reading_time(body)
-
-        {
-          :ok,
-          %__MODULE__{
-            title: meta.title,
-            slug: meta.slug,
-            datetime: meta.datetime,
-            draft?: meta.draft?,
-            reading_time: reading_time,
-            excerpt: excerpt,
-            body: body,
-            metadata: meta.extras,
-          },
-      }
-      {:error, reason} -> {:error, reason}
-    end
+  def new(metadata, excerpt, parsed_excerpt, body, parsed_body) do
+    %__MODULE__{}
+    |> enrich_metadata(metadata)
+    |> enrich_excerpt(excerpt, parsed_excerpt)
+    |> enrich_body(body, parsed_body)
+    |> enrich_reading_time(compute_reading_time(body))
   end
 
-  @doc """
-  Puts parsed excerpt content into struct.
-  """
-  @spec put_excerpt_html(post :: __MODULE__.t, excerpt_html :: String.t) :: Nabo.Post.t
-  def put_excerpt_html(%__MODULE__{} = post, excerpt_html) do
-    %__MODULE__{post | excerpt_html: excerpt_html}
+  defp enrich_metadata(%__MODULE__{} = post, %Metadata{} = metadata) do
+    post
+    |> Map.put(:title, metadata.title)
+    |> Map.put(:slug, metadata.slug)
+    |> Map.put(:datetime, metadata.datetime)
+    |> Map.put(:draft?, metadata.draft?)
+    |> Map.put(:metadata, metadata.extras)
   end
 
-  @doc """
-  Puts parsed body content into struct.
-  """
-  @spec put_body_html(post :: __MODULE__.t, body_html :: String.t) :: Nabo.Post.t
-  def put_body_html(%__MODULE__{} = post, body_html) do
-    %__MODULE__{post | body_html: body_html}
+  defp enrich_excerpt(%__MODULE__{} = post, raw_excerpt, parsed_excerpt) do
+    post
+    |> Map.put(:excerpt, raw_excerpt)
+    |> Map.put(:excerpt_html, parsed_excerpt)
   end
 
-  @doc """
-  Computes reading time of the given post body string
-  """
-  @spec compute_reading_time(body :: String.t) :: Float.t
-  def compute_reading_time(body) when is_binary(body) do
-    body
+  defp enrich_body(%__MODULE__{} = post, raw_body, parsed_body) do
+    post
+    |> Map.put(:body, raw_body)
+    |> Map.put(:body_html, parsed_body)
+  end
+
+  defp enrich_reading_time(%__MODULE__{} = post, reading_time) do
+    post
+    |> Map.put(:reading_time, reading_time)
+  end
+
+  defp compute_reading_time(string, words_per_minute \\ 275) do
+    string
     |> String.split(" ")
-    |> Enum.count
-    |> Kernel./(275)
+    |> Enum.count()
+    |> Kernel./(words_per_minute)
     |> Float.round(2)
   end
 end

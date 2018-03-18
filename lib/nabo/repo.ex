@@ -28,17 +28,21 @@ defmodule Nabo.Repo do
   See `Nabo.Compiler` more more information of how to build your own compiler.
   """
 
-  alias Nabo.Post
+  require Logger
 
   @doc false
+
   defmacro __using__(options) do
     quote bind_quoted: [options: options], unquote: true do
-      {{compiler, compiler_opts}, _} = Keyword.pop(options, :compiler, {Nabo.Compilers.Markdown, []})
-      root = Keyword.fetch!(options, :root) |> Path.relative_to_cwd
+      root_path =
+        options
+        |> Keyword.fetch!(:root)
+        |> Path.relative_to_cwd
 
-      @root root
-      @compiler compiler
-      @compiler_opts compiler_opts
+      compiler_options = Keyword.get(options, :compiler, [])
+
+      @root_path root_path
+      @compiler_options compiler_options
 
       @before_compile unquote(__MODULE__)
     end
@@ -46,38 +50,43 @@ defmodule Nabo.Repo do
 
   @doc false
   defmacro __before_compile__(env) do
-    compiler = Module.get_attribute(env.module, :compiler)
-    compiler_opts = Module.get_attribute(env.module, :compiler_opts)
-    root = Module.get_attribute(env.module, :root)
-    pattern = "**/*"
-    pairs = find_all(root, pattern)
-            |> Enum.map(& compile(compiler, &1, compiler_opts))
-    names = Enum.map(pairs, &elem(&1, 0))
-    codes = Enum.map(pairs, &elem(&1, 1))
+    compiler_options = Module.get_attribute(env.module, :compiler_options)
+    root_path = Module.get_attribute(env.module, :root_path)
+    pattern = "*"
 
-    quote [generated: true] do
-      unquote(codes)
+    {posts_map, _compiled_errors} =
+      root_path
+      |> find_all(pattern)
+      |> async_compile(env.module, compiler_options)
+      |> build_posts_map()
 
-      defp _find(name), do: nil
+    quote do
+      defp posts_map() do
+        unquote(posts_map)
+      end
 
-      def get(name) when is_binary(name) do
-        case _find(name) do
-          %Post{} = post -> {:ok, post}
-          nil -> {:error, "Could not find post #{name}. Availables: #{formatted_availables()}"}
+      def get(name) do
+        case Map.fetch(posts_map(), name) do
+          {:ok, post} ->
+            {:ok, post}
+
+          :error ->
+            {:error, "cannot find post #{name}, availables: #{inspect(availables())}"}
         end
       end
 
       def get!(name) when is_binary(name) do
         case get(name) do
-          {:ok, post} -> post
-          {:error, reason} -> raise(reason)
+          {:ok, post} ->
+            post
+
+          {:error, reason} ->
+            raise(reason)
         end
       end
 
-      def all do
-        availables()
-        |> Enum.map(& Task.async(fn -> get!(&1) end))
-        |> Enum.map(& Task.await/1)
+      def all() do
+        Map.values(posts_map())
       end
 
       def order_by_datetime(posts) do
@@ -93,34 +102,55 @@ defmodule Nabo.Repo do
       end
 
       def availables do
-        unquote(names)
+        Map.keys(posts_map())
       end
+    end
+  end
 
-      defp formatted_availables() do
-        availables() |> Enum.join(", ")
-      end
+  defp build_posts_map(compiled_entries, map \\ %{}, errors \\ [])
+
+  defp build_posts_map([{:ok, slug, post} | rest], map, errors) do
+    build_posts_map(rest, Map.put(map, slug, post), errors)
+  end
+
+  defp build_posts_map([{:error, path, reason} | rest], map, errors) do
+    build_posts_map(rest, map, [{path, reason} | errors])
+  end
+
+  defp build_posts_map([], map, errors) do
+    {Macro.escape(map), errors}
+  end
+
+  defp async_compile(paths, repo_name, compiler_options) do
+    paths
+    |> Enum.map(&Task.async(fn -> compile(&1, repo_name, compiler_options) end))
+    |> Enum.map(&Task.await(&1))
+  end
+
+  defp compile(path, repo_name, options) do
+    path
+    |> File.read!()
+    |> Nabo.Compiler.compile(options)
+    |> case do
+      {:ok, slug, post} ->
+        {:ok, slug, post}
+
+      {:error, reason} ->
+        log_level = Keyword.get(options, :log_level, :warn)
+        maybe_log(log_level, "Unable to compile post #{path} in #{repo_name}, reason: #{reason}")
+
+        {:error, path, reason}
     end
   end
 
   defp find_all(root, pattern) do
     root
-    |> Path.join(pattern <> ".md")
+    |> Path.join([pattern, ".md"])
     |> Path.wildcard()
   end
 
-  defp compile(compiler, path, compiler_opts) do
-    {identifier, compiled} = File.read!(path)
-                             |> compiler.compile(compiler_opts)
-
-    {identifier, quote do
-      @file unquote(path)
-      @external_resource unquote(path)
-
-      defp _find(unquote(identifier)) do
-        unquote(compiled)
-      end
-    end}
-  end
+  defp maybe_log(false, _message), do: :ok
+  defp maybe_log(level, message), do: Logger.log(level, message)
 
   @doc """
   Finds a post by the given slug.
