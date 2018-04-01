@@ -72,7 +72,7 @@ defmodule Nabo.Repo do
       |> async_compile(env.module, compiler_options)
       |> build_posts_map()
 
-    external_resources = Enum.map(post_paths, &quote(do: @external_resources unquote(&1)))
+    external_resources = Enum.map(post_paths, &quote(do: @external_resource unquote(&1)))
 
     quote do
       unquote(external_resources)
