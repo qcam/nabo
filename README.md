@@ -19,7 +19,7 @@ parsers.
 ```elixir
 def deps() do
   [
-    {:nabo, "~> 1.0.0"},
+    {:nabo, "~> 1.0.1"},
     {:jason, "~> 1.0.0"}, # optional
     {:earmark, "~> 1.2.4"}, # optional
   ]

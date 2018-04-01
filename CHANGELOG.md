@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.0.1
+
+* Mark post paths as `@external_resource` for better recompilation.
+
 ## v1.0.0
 
 * Introduce new parser `Nabo.Parser.Front`.
