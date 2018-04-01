@@ -65,14 +65,18 @@ defmodule Nabo.Repo do
     compiler_options = Module.get_attribute(env.module, :compiler_options)
     root_path = Module.get_attribute(env.module, :root_path)
     pattern = "*"
+    post_paths = find_all(root_path, pattern)
 
     {posts_map, _compiled_errors} =
-      root_path
-      |> find_all(pattern)
+      post_paths
       |> async_compile(env.module, compiler_options)
       |> build_posts_map()
 
+    external_resources = Enum.map(post_paths, &quote(do: @external_resources unquote(&1)))
+
     quote do
+      unquote(external_resources)
+
       defp posts_map() do
         unquote(posts_map)
       end
@@ -136,7 +140,7 @@ defmodule Nabo.Repo do
   defp async_compile(paths, repo_name, compiler_options) do
     paths
     |> Enum.map(&Task.async(fn -> compile(&1, repo_name, compiler_options) end))
-    |> Enum.map(&Task.await(&1))
+    |> Enum.map(&Task.await/1)
   end
 
   defp compile(path, repo_name, options) do
