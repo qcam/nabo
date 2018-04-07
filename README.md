@@ -53,7 +53,7 @@ Nabo provides `nabo.gen.post` mix task to generate posts.
 mix nabo.gen.post my-first-blog-post
 ```
 
-All posts in Nabo should follow this format.
+All posts in Nabo should follow this format:
 
 ```md
 {
