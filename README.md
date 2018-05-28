@@ -1,3 +1,5 @@
+<h1 align="center"> <br><img src="logo/nabo.gif?raw=true" alt="nabo" width="350"> <br>
+
 # Nabo
 
 Dead simple blog engine written in Elixir.
