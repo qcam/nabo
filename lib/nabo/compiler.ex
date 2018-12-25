@@ -60,9 +60,9 @@ defmodule Nabo.Compiler do
 
   defp assert_parsers_loaded!(parsers) do
     Enum.each(parsers, fn parser ->
-      IO.inspect loaded_and_exported?(parser, :parse, 2)
+      # IO.inspect loaded_and_exported?(parser, :parse, 2)
 
-      if not Code.ensure_loaded?(parser) do
+      if not Code.ensure_compiled?(parser) do
         raise ArgumentError, "Configured parser #{parser} is not available"
       end
     end)
