@@ -60,10 +60,19 @@ defmodule Nabo.Compiler do
 
   defp assert_parsers_loaded!(parsers) do
     Enum.each(parsers, fn parser ->
-      IO.inspect Code.ensure_loaded(parser)
+      IO.inspect loaded_and_exported?(parser, :parse, 2)
+
       if not Code.ensure_loaded?(parser) do
         raise ArgumentError, "Configured parser #{parser} is not available"
       end
     end)
+  end
+
+  defp loaded_and_exported?(module, fun, arity) do
+    if :erlang.module_loaded(module) or Code.ensure_loaded?(module) do
+      function_exported?(module, fun, arity)
+    else
+      raise ArgumentError, "cannot use #{inspect(module)} as Ecto.Type, module is not available"
+    end
   end
 end
