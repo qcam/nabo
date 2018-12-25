@@ -63,7 +63,7 @@ defmodule Nabo.Compiler do
       # IO.inspect loaded_and_exported?(parser, :parse, 2)
 
       if not Code.ensure_compiled?(parser) do
-        raise ArgumentError, "Configured parser #{parser} is not available"
+        raise ArgumentError, "Configured parser #{inspect(parser)} is not available"
       end
     end)
   end
