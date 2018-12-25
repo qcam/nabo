@@ -63,6 +63,10 @@ defmodule Nabo.Repo do
   @doc false
   defmacro __before_compile__(env) do
     compiler_options = Module.get_attribute(env.module, :compiler_options)
+
+    {body_parser, _body_parser_opts} =
+      Keyword.get(compiler_options, :body_parser, {Nabo.Parser.Markdown, []})
+
     root_path = Module.get_attribute(env.module, :root_path)
     pattern = "*"
     post_paths = find_all(root_path, pattern)
@@ -75,6 +79,8 @@ defmodule Nabo.Repo do
     external_resources = Enum.map(post_paths, &quote(do: @external_resource unquote(&1)))
 
     quote do
+      require unquote(body_parser)
+
       unquote(external_resources)
 
       defp posts_map() do
