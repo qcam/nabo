@@ -21,6 +21,8 @@ defmodule Nabo.Compiler do
     split_pattern =
       Keyword.get(options, :split_pattern, @default_pattern)
 
+    assert_parsers_loaded!([front_parser, excerpt_parser, body_parser])
+
     case split_parts(data, split_pattern) do
       {:ok, {front, excerpt, body}} ->
         with {:ok, metadata} <- front_parser.parse(front, front_parser_opts),
@@ -54,5 +56,13 @@ defmodule Nabo.Compiler do
       _other ->
         {:error, "bad post format"}
     end
+  end
+
+  defp assert_parsers_loaded!(parsers) do
+    Enum.each(parsers, fn parser ->
+      if not Code.ensure_loaded?(parser) do
+        raise ArgumentError, "Configured parser #{parser} is not available"
+      end
+    end)
   end
 end
