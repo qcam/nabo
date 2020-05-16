@@ -4,7 +4,7 @@ defmodule Nabo.IntegrationTest do
   alias Nabo.TestRepos
 
   test "get/1 with a short markdown" do
-    assert {:ok, post} = TestRepos.Default.get("this-year-0202")
+    assert post = TestRepos.Default.get("this-year-0202")
 
     assert post.title == "This year 02-02"
     assert post.slug == "this-year-0202"
@@ -15,11 +15,11 @@ defmodule Nabo.IntegrationTest do
     assert post.body == "### Welcome!\n\nThis is your first blog post built with *Nabo blog engine*\n"
     assert post.body_html == "<h3>Welcome!</h3>\n<p>This is your first blog post built with <em>Nabo blog engine</em></p>\n"
 
-    assert {:error, _} = TestRepos.Default.get("something-that-does-not-exist")
+    assert TestRepos.Default.get("something-that-does-not-exist") == nil
   end
 
   test "get/1 with a long markdown" do
-    assert {:ok, post} = TestRepos.Default.get("this-year-0101")
+    assert post = TestRepos.Default.get("this-year-0101")
 
     assert post.title == "This year 01-01"
     assert post.slug == "this-year-0101"
@@ -28,11 +28,11 @@ defmodule Nabo.IntegrationTest do
     assert post.excerpt == "This is the post for 01-01"
     assert post.excerpt_html == "<p>This is the post for 01-01</p>\n"
 
-    assert {:error, _} = TestRepos.Default.get("something-that-does-not-exist")
+    assert TestRepos.Default.get("something-that-does-not-exist") == nil
   end
 
   test "get/1 with customized compiler" do
-    assert {:ok, post} = TestRepos.Customized.get("this-year-0303")
+    assert post = TestRepos.Customized.get("this-year-0303")
 
     assert post.body == "### Welcome!\n\n```elixir\na = 1\n```\n"
     assert post.body_html == "<h3>Welcome!</h3>\n<pre><code class=\"elixir nabo-elixir\">a = 1</code></pre>\n"

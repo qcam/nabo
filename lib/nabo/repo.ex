@@ -83,21 +83,19 @@ defmodule Nabo.Repo do
 
       for %{slug: slug} = post <- @posts do
         def get(unquote(slug)) do
-          {:ok, unquote(Macro.escape(post))}
+          unquote(Macro.escape(post))
         end
       end
 
-      def get(slug) do
-        {:error, "cannot find post #{slug}, availables: #{inspect(availables())}"}
-      end
+      def get(slug), do: nil
 
-      def get!(name) when is_binary(name) do
-        case get(name) do
-          {:ok, post} ->
+      def get!(slug) when is_binary(slug) do
+        case get(slug) do
+          nil ->
+            raise "could not find post with #{inspect(slug)}, availables: #{inspect(availables())}"
+
+          post ->
             post
-
-          {:error, reason} ->
-            raise(reason)
         end
       end
 
@@ -144,20 +142,20 @@ defmodule Nabo.Repo do
 
   ## Example
 
-      {:ok, post} = MyRepo.get("my-slug")
+      MyRepo.get("my-slug")
 
   """
-  @callback get(name :: String.t()) :: {:ok, Nabo.Post.t()} | {:error, any}
+  @callback get(slug :: Nabo.Post.slug()) :: Nabo.Post.t() | nil
 
   @doc """
-  Similar to `get/1` but raises error when no post was found.
+  Similar to `get/1` but raises error when no post is found.
 
   ## Example
 
       post = MyRepo.get!("my-slug")
 
   """
-  @callback get!(name :: String.t()) :: Nabo.Post.t()
+  @callback get!(slug :: Nabo.Post.slug()) :: Nabo.Post.t()
 
   @doc """
   Fetches all available posts in the repo.
@@ -209,5 +207,5 @@ defmodule Nabo.Repo do
       availables = MyRepo.availables()
 
   """
-  @callback availables() :: List.t()
+  @callback availables() :: [Nabo.Post.slug()]
 end

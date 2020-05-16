@@ -59,7 +59,9 @@ defmodule Nabo.Post do
     :reading_time
   ]
 
-  @type t :: %__MODULE__{
+  @type slug() :: String.t()
+
+  @type t() :: %__MODULE__{
     body: String.t,
     body_html: String.t,
     datetime: DateTime.t,
@@ -68,7 +70,7 @@ defmodule Nabo.Post do
     excerpt: String.t,
     excerpt_html: String.t,
     metadata: Map.t,
-    slug: String.t,
+    slug: slug(),
     title: String.t,
   }
 
