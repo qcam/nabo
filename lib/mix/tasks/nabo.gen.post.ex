@@ -26,10 +26,10 @@ defmodule Mix.Tasks.Nabo.Gen.Post do
     case OptionParser.parse(args, switches: switches, aliases: aliases) do
       {options, [slug], _invalid} ->
         root_path = Keyword.get(options, :path, "priv/posts/")
-        datetime = DateTime.utc_now()
+        published_at = DateTime.utc_now()
         path = Path.relative_to(root_path, Mix.Project.app_path)
-        file = Path.join(path, "#{format_datetime(datetime)}_#{slug}.md")
-        create_file(file, post_template(slug: slug, datetime: datetime))
+        file = Path.join(path, "#{format_datetime(published_at)}_#{slug}.md")
+        create_file(file, post_template(slug: slug, published_at: published_at))
 
       _ ->
         Mix.raise "expected nabo.gen.post to receive post slug, " <>
@@ -37,14 +37,14 @@ defmodule Mix.Tasks.Nabo.Gen.Post do
     end
   end
 
-  defp format_datetime(datetime) do
+  defp format_datetime(published_at) do
     [
-      datetime.year,
-      pad_string(datetime.month),
-      pad_string(datetime.day),
-      pad_string(datetime.hour),
-      pad_string(datetime.minute),
-      pad_string(datetime.second),
+      published_at.year,
+      pad_string(published_at.month),
+      pad_string(published_at.day),
+      pad_string(published_at.hour),
+      pad_string(published_at.minute),
+      pad_string(published_at.second),
     ] |> Enum.join("")
   end
 
@@ -58,7 +58,7 @@ defmodule Mix.Tasks.Nabo.Gen.Post do
   {
     "title": "",
     "slug": "<%= @slug %>",
-    "datetime": "<%= DateTime.to_iso8601(@datetime) %>"
+    "published_at": "<%= DateTime.to_iso8601(@published_at) %>"
   }
   ---
   """

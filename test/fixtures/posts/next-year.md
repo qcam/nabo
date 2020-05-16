@@ -1,7 +1,7 @@
 {
   "title": "Next Year",
   "slug": "next-year",
-  "datetime": "2018-01-01T00:00:00Z"
+  "published_at": "2018-01-01T00:00:00Z"
 }
 ---
 This is the post for next year

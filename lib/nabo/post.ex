@@ -20,7 +20,7 @@ defmodule Nabo.Post do
       {
         "title": "Hello World",
         "slug": "hello-world",
-        "datetime": "2017-01-01T00:00:00Z"
+        "published_at": "2017-01-01T00:00:00Z"
       }
       ---
       Welcome to my blog!
@@ -35,7 +35,7 @@ defmodule Nabo.Post do
       {
         "title": "Hello World",
         "slug": "hello-world",
-        "datetime": "2017-01-01T00:00:00Z"
+        "published_at": "2017-01-01T00:00:00Z"
       }
       ---
       ### Hello there!
@@ -49,7 +49,7 @@ defmodule Nabo.Post do
   defstruct [
     :title,
     :slug,
-    :datetime,
+    :published_at,
     :draft?,
     :excerpt,
     :excerpt_html,
@@ -64,7 +64,7 @@ defmodule Nabo.Post do
   @type t() :: %__MODULE__{
     body: String.t,
     body_html: String.t,
-    datetime: DateTime.t,
+    published_at: DateTime.t,
     draft?: boolean,
     reading_time: Float.t,
     excerpt: String.t,
@@ -88,7 +88,7 @@ defmodule Nabo.Post do
     post
     |> Map.put(:title, metadata.title)
     |> Map.put(:slug, metadata.slug)
-    |> Map.put(:datetime, metadata.datetime)
+    |> Map.put(:published_at, metadata.published_at)
     |> Map.put(:draft?, metadata.draft?)
     |> Map.put(:metadata, metadata.extras)
   end

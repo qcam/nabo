@@ -10,12 +10,12 @@ defmodule Nabo.Parser.Front do
       {:ok, json} ->
         with {:ok, title} <- build_title(json),
              {:ok, slug} <- build_slug(json),
-             {:ok, datetime} <- build_datetime(json),
+             {:ok, published_at} <- build_published_at(json),
              {:ok, draft?} <- build_draft(json) do
           metadata = %Metadata{
             title: title,
             slug: slug,
-            datetime: datetime,
+            published_at: published_at,
             draft?: draft?,
             extras: json
           }
@@ -43,18 +43,18 @@ defmodule Nabo.Parser.Front do
     end
   end
 
-  defp build_datetime(json) do
-    case Map.fetch(json, "datetime") do
+  defp build_published_at(json) do
+    case Map.fetch(json, "published_at") do
       :error ->
-        {:error, "\"datetime\" has to be set"}
+        {:error, "\"published_at\" has to be set"}
 
-      {:ok, datetime} ->
-        case DateTime.from_iso8601(datetime) do
-          {:ok, datetime, _} ->
-            {:ok, datetime}
+      {:ok, published_at} ->
+        case DateTime.from_iso8601(published_at) do
+          {:ok, published_at, _} ->
+            {:ok, published_at}
 
           {:error, _reason} ->
-            {:error, "\"datetime\" has to be in ISO-8601 format, got: #{inspect(datetime)}"}
+            {:error, "\"published_at\" has to be in ISO-8601 format, got: #{inspect(published_at)}"}
         end
     end
   end

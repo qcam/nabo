@@ -8,7 +8,7 @@ defmodule Nabo.IntegrationTest do
 
     assert post.title == "This year 02-02"
     assert post.slug == "this-year-0202"
-    assert post.datetime == DateTime.from_naive!(~N[2017-02-02 00:00:00], "Etc/UTC")
+    assert post.published_at == DateTime.from_naive!(~N[2017-02-02 00:00:00], "Etc/UTC")
     refute post.draft?
     assert post.excerpt == "This is the post for 02-02"
     assert post.excerpt_html == "<p>This is the post for 02-02</p>\n"
@@ -23,7 +23,7 @@ defmodule Nabo.IntegrationTest do
 
     assert post.title == "This year 01-01"
     assert post.slug == "this-year-0101"
-    assert post.datetime == DateTime.from_naive!(~N[2017-01-01 00:00:00], "Etc/UTC")
+    assert post.published_at == DateTime.from_naive!(~N[2017-01-01 00:00:00], "Etc/UTC")
     refute post.draft?
     assert post.excerpt == "This is the post for 01-01"
     assert post.excerpt_html == "<p>This is the post for 01-01</p>\n"

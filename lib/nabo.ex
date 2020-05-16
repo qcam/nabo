@@ -24,7 +24,7 @@ defmodule Nabo do
       {
         "title": "First Nabo post",
         "slug": "first-post",
-        "datetime": "2017-01-01T00:00:00Z"
+        "published_at": "2017-01-01T00:00:00Z"
       }
       ---
       This is my first blog post created with Nabo.

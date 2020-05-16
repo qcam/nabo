@@ -10,7 +10,7 @@ defmodule Nabo.Metadata do
   defstruct [
     :slug,
     :title,
-    :datetime,
+    :published_at,
     :draft?,
     :extras
   ]

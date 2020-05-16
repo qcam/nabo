@@ -10,7 +10,7 @@ defmodule Nabo.CompilerTest do
       {:ok, %Nabo.Metadata{
         title: "Incompetent Title",
         slug: "incompetent-slug",
-        datetime: DateTime.from_naive!(~N[2017-01-01 00:00:00], "Etc/UTC"),
+        published_at: DateTime.from_naive!(~N[2017-01-01 00:00:00], "Etc/UTC"),
         draft?: false
       }}
     end
@@ -31,7 +31,7 @@ defmodule Nabo.CompilerTest do
 
   test "compile/2 with default parsers" do
     raw_post = """
-    {"title":"Title","slug":"slug","datetime":"2017-01-01T01:02:03Z","draft":true}
+    {"title":"Title","slug":"slug","published_at":"2017-01-01T01:02:03Z","draft":true}
     ---
     This is the _excerpt_.
     ---
@@ -41,7 +41,7 @@ defmodule Nabo.CompilerTest do
     assert {:ok, post} = compile(raw_post, [])
     assert post.title == "Title"
     assert post.slug == "slug"
-    assert post.datetime == DateTime.from_naive!(~N[2017-01-01 01:02:03], "Etc/UTC")
+    assert post.published_at == DateTime.from_naive!(~N[2017-01-01 01:02:03], "Etc/UTC")
     assert post.excerpt == "This is the _excerpt_."
     assert post.excerpt_html == "<p>This is the <em>excerpt</em>.</p>\n"
     assert post.body == "This is the **BODY**.\n"
@@ -50,7 +50,7 @@ defmodule Nabo.CompilerTest do
 
   test "compile/2 with custom split pattern" do
     raw_post = """
-    {"title":"Title","slug":"slug","datetime":"2017-01-01T01:02:03Z","draft":true}
+    {"title":"Title","slug":"slug","published_at":"2017-01-01T01:02:03Z","draft":true}
     <<----->>
     This is the _excerpt_.
     <<----->>
@@ -60,7 +60,7 @@ defmodule Nabo.CompilerTest do
     assert {:ok, post} = compile(raw_post, [split_pattern: "<<----->>"])
     assert post.title == "Title"
     assert post.slug == "slug"
-    assert post.datetime == DateTime.from_naive!(~N[2017-01-01 01:02:03], "Etc/UTC")
+    assert post.published_at == DateTime.from_naive!(~N[2017-01-01 01:02:03], "Etc/UTC")
     assert post.excerpt == "\nThis is the _excerpt_.\n"
     assert post.excerpt_html == "<p>This is the <em>excerpt</em>.</p>\n"
     assert post.body == "\nThis is the **BODY**.\n"
@@ -69,7 +69,7 @@ defmodule Nabo.CompilerTest do
 
   test "compile/2 with custom parsers" do
     raw_post = """
-    {"title":"Title","slug":"slug","datetime":"2017-01-01T01:02:03Z","draft":true}
+    {"title":"Title","slug":"slug","published_at":"2017-01-01T01:02:03Z","draft":true}
     ---
     This is the _excerpt_.
     ---
@@ -84,7 +84,7 @@ defmodule Nabo.CompilerTest do
     assert {:ok, post} = compile(raw_post, options)
     assert post.title == "Incompetent Title"
     assert post.slug == "incompetent-slug"
-    assert post.datetime == DateTime.from_naive!(~N[2017-01-01 00:00:00], "Etc/UTC")
+    assert post.published_at == DateTime.from_naive!(~N[2017-01-01 00:00:00], "Etc/UTC")
     assert post.excerpt == "This is the _excerpt_."
     assert post.excerpt_html == "This IS NOT the _excerpt_."
     assert post.body == "This is the **BODY**.\n"

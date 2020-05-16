@@ -100,15 +100,15 @@ defmodule Nabo.Repo do
       end
 
       def order_by_datetime(posts) do
-        Enum.sort(posts, &(DateTime.compare(&1.datetime, &2.datetime) == :gt))
+        Enum.sort(posts, &(DateTime.compare(&1.published_at, &2.published_at) == :gt))
       end
 
       def exclude_draft(posts) do
         Enum.reject(posts, & &1.draft?)
       end
 
-      def filter_published(posts, datetime \\ DateTime.utc_now()) do
-        Enum.filter(posts, &(DateTime.compare(&1.datetime, datetime) == :lt))
+      def filter_published(posts, published_at \\ DateTime.utc_now()) do
+        Enum.filter(posts, &(DateTime.compare(&1.published_at, published_at) == :lt))
       end
     end
   end
@@ -195,7 +195,7 @@ defmodule Nabo.Repo do
       posts = MyRepo.all() |> MyRepo.filter_published()
 
   """
-  @callback filter_published(posts :: [Nabo.Post.t()], datetime :: DateTime.t()) :: [
+  @callback filter_published(posts :: [Nabo.Post.t()], published_at :: DateTime.t()) :: [
               Nabo.Post.t()
             ]
 

@@ -13,7 +13,7 @@ defmodule Nabo.Parser do
   Given a raw post like this.
 
   ```
-  title,slug,datetime,draft
+  title,slug,published_at,draft
   Nabo,nabo,"Monday, 15-Aug-2005 15:52:01 UTC",false
   ---
   This is a post body
@@ -37,7 +37,7 @@ defmodule Nabo.Parser do
       metadata = %Nabo.Metadata{
         title: data["title"],
         slug: data["slug"],
-        datetime: data["datetime"],
+        published_at: data["published_at"],
         draft?: data["draft"]
       }
 

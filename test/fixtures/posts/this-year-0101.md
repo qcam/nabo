@@ -1,7 +1,7 @@
 {
   "title": "This year 01-01",
   "slug": "this-year-0101",
-  "datetime": "2017-01-01T00:00:00Z"
+  "published_at": "2017-01-01T00:00:00Z"
 }
 ---
 This is the post for 01-01
