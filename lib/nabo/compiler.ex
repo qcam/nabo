@@ -29,7 +29,7 @@ defmodule Nabo.Compiler do
              {:ok, parsed_excerpt} <- excerpt_parser.parse(excerpt, excerpt_parser_opts),
              {:ok, parsed_body} <- body_parser.parse(body, body_parser_opts) do
           post = Post.new(metadata, excerpt, parsed_excerpt, body, parsed_body)
-          {:ok, post.slug, post}
+          {:ok, post}
         else
           {:error, reason} ->
             {:error, reason}

@@ -45,11 +45,13 @@ defmodule Nabo.Repo do
   @doc false
 
   defmacro __using__(options) do
-    quote bind_quoted: [options: options], unquote: true do
+    quote location: :keep do
+      options = unquote(options)
+
       root_path =
         options
         |> Keyword.fetch!(:root)
-        |> Path.relative_to_cwd
+        |> Path.relative_to_cwd()
 
       compiler_options = Keyword.get(options, :compiler, [])
 
@@ -62,33 +64,31 @@ defmodule Nabo.Repo do
 
   @doc false
   defmacro __before_compile__(env) do
-    compiler_options = Module.get_attribute(env.module, :compiler_options)
     root_path = Module.get_attribute(env.module, :root_path)
-    pattern = "*"
-    post_paths = find_all(root_path, pattern)
+    compiler_options = Module.get_attribute(env.module, :compiler_options)
 
-    {posts_map, _compiled_errors} =
-      post_paths
-      |> async_compile(env.module, compiler_options)
-      |> build_posts_map()
+    post_paths = Path.wildcard(root_path <> "/*.md")
 
-    external_resources = Enum.map(post_paths, &quote(do: @external_resource unquote(&1)))
+    posts = post_paths |> compile_async(compiler_options) |> Macro.escape()
 
-    quote do
-      unquote(external_resources)
+    quote bind_quoted: [posts: posts, paths: post_paths] do
+      for path <- paths, do: @external_resource(path)
 
-      defp posts_map() do
-        unquote(posts_map)
+      @posts posts
+
+      def all(), do: @posts
+
+      slugs = Enum.map(@posts, & &1.slug)
+      def availables(), do: unquote(slugs)
+
+      for %{slug: slug} = post <- @posts do
+        def get(unquote(slug)) do
+          {:ok, unquote(Macro.escape(post))}
+        end
       end
 
-      def get(name) do
-        case Map.fetch(posts_map(), name) do
-          {:ok, post} ->
-            {:ok, post}
-
-          :error ->
-            {:error, "cannot find post #{name}, availables: #{inspect(availables())}"}
-        end
+      def get(slug) do
+        {:error, "cannot find post #{slug}, availables: #{inspect(availables())}"}
       end
 
       def get!(name) when is_binary(name) do
@@ -101,72 +101,43 @@ defmodule Nabo.Repo do
         end
       end
 
-      def all() do
-        Map.values(posts_map())
-      end
-
       def order_by_datetime(posts) do
-        Enum.sort(posts, & DateTime.compare(&1.datetime, &2.datetime) == :gt)
+        Enum.sort(posts, &(DateTime.compare(&1.datetime, &2.datetime) == :gt))
       end
 
       def exclude_draft(posts) do
-        Enum.filter(posts, & !&1.draft?)
+        Enum.reject(posts, & &1.draft?)
       end
 
-      def filter_published(posts, datetime \\ DateTime.utc_now) do
-        Enum.filter(posts, & DateTime.compare(&1.datetime, datetime) == :lt)
-      end
-
-      def availables do
-        Map.keys(posts_map())
+      def filter_published(posts, datetime \\ DateTime.utc_now()) do
+        Enum.filter(posts, &(DateTime.compare(&1.datetime, datetime) == :lt))
       end
     end
   end
 
-  defp build_posts_map(compiled_entries, map \\ %{}, errors \\ [])
-
-  defp build_posts_map([{:ok, slug, post} | rest], map, errors) do
-    build_posts_map(rest, Map.put(map, slug, post), errors)
-  end
-
-  defp build_posts_map([{:error, path, reason} | rest], map, errors) do
-    build_posts_map(rest, map, [{path, reason} | errors])
-  end
-
-  defp build_posts_map([], map, errors) do
-    {Macro.escape(map), errors}
-  end
-
-  defp async_compile(paths, repo_name, compiler_options) do
+  defp compile_async(paths, compiler_options) do
     paths
-    |> Enum.map(&Task.async(fn -> compile(&1, repo_name, compiler_options) end))
-    |> Enum.map(&Task.await/1)
+    |> Task.async_stream(&compile(&1, compiler_options))
+    |> Enum.flat_map(fn
+      {:ok, compiled} -> List.wrap(compiled)
+      {:error, _} -> []
+    end)
   end
 
-  defp compile(path, repo_name, options) do
-    path
-    |> File.read!()
-    |> Nabo.Compiler.compile(options)
-    |> case do
-      {:ok, slug, post} ->
-        {:ok, slug, post}
+  defp compile(path, options) do
+    log_level = Keyword.get(options, :log_level, :warn)
+    content = File.read!(path)
+
+    case Nabo.Compiler.compile(content, options) do
+      {:ok, post} ->
+        post
 
       {:error, reason} ->
-        log_level = Keyword.get(options, :log_level, :warn)
-        maybe_log(log_level, "Unable to compile post #{path} in #{repo_name}, reason: #{reason}")
+        Logger.log(log_level, ["Could not compile ", inspect(path), " due to: ", reason])
 
-        {:error, path, reason}
+        nil
     end
   end
-
-  defp find_all(root, pattern) do
-    root
-    |> Path.join([pattern, ".md"])
-    |> Path.wildcard()
-  end
-
-  defp maybe_log(false, _message), do: :ok
-  defp maybe_log(level, message), do: Logger.log(level, message)
 
   @doc """
   Finds a post by the given slug.
@@ -176,7 +147,7 @@ defmodule Nabo.Repo do
       {:ok, post} = MyRepo.get("my-slug")
 
   """
-  @callback get(name :: String.t) :: {:ok, Nabo.Post.t} | {:error, any}
+  @callback get(name :: String.t()) :: {:ok, Nabo.Post.t()} | {:error, any}
 
   @doc """
   Similar to `get/1` but raises error when no post was found.
@@ -186,7 +157,7 @@ defmodule Nabo.Repo do
       post = MyRepo.get!("my-slug")
 
   """
-  @callback get!(name :: String.t) :: Nabo.Post.t
+  @callback get!(name :: String.t()) :: Nabo.Post.t()
 
   @doc """
   Fetches all available posts in the repo.
@@ -196,7 +167,7 @@ defmodule Nabo.Repo do
       posts = MyRepo.all()
 
   """
-  @callback all() :: [Nabo.Post.t]
+  @callback all() :: [Nabo.Post.t()]
 
   @doc """
   Order posts by date.
@@ -206,7 +177,7 @@ defmodule Nabo.Repo do
       posts = MyRepo.all() |> MyRepo.order_by_date()
 
   """
-  @callback order_by_date(posts :: [Nabo.Post.t]) :: [Nabo.Post.t]
+  @callback order_by_date(posts :: [Nabo.Post.t()]) :: [Nabo.Post.t()]
 
   @doc """
   Exclude draft posts.
@@ -216,7 +187,7 @@ defmodule Nabo.Repo do
       posts = MyRepo.all() |> MyRepo.exclude_draft()
 
   """
-  @callback exclude_draft(posts :: [Nabo.Post.t]) :: [Nabo.Post.t]
+  @callback exclude_draft(posts :: [Nabo.Post.t()]) :: [Nabo.Post.t()]
 
   @doc """
   Filter only posts published before a specified datetime.
@@ -226,7 +197,9 @@ defmodule Nabo.Repo do
       posts = MyRepo.all() |> MyRepo.filter_published()
 
   """
-  @callback filter_published(posts :: [Nabo.Post.t], datetime :: DateTime.t) :: [Nabo.Post.t]
+  @callback filter_published(posts :: [Nabo.Post.t()], datetime :: DateTime.t()) :: [
+              Nabo.Post.t()
+            ]
 
   @doc """
   Fetches all availables post names in the repo.
@@ -236,5 +209,5 @@ defmodule Nabo.Repo do
       availables = MyRepo.availables()
 
   """
-  @callback availables() :: List.t
+  @callback availables() :: List.t()
 end

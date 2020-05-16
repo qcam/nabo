@@ -38,7 +38,7 @@ defmodule Nabo.CompilerTest do
     This is the **BODY**.
     """
 
-    assert {:ok, "slug", post} = compile(raw_post, [])
+    assert {:ok, post} = compile(raw_post, [])
     assert post.title == "Title"
     assert post.slug == "slug"
     assert post.datetime == DateTime.from_naive!(~N[2017-01-01 01:02:03], "Etc/UTC")
@@ -57,7 +57,7 @@ defmodule Nabo.CompilerTest do
     This is the **BODY**.
     """
 
-    assert {:ok, "slug", post} = compile(raw_post, [split_pattern: "<<----->>"])
+    assert {:ok, post} = compile(raw_post, [split_pattern: "<<----->>"])
     assert post.title == "Title"
     assert post.slug == "slug"
     assert post.datetime == DateTime.from_naive!(~N[2017-01-01 01:02:03], "Etc/UTC")
@@ -81,7 +81,7 @@ defmodule Nabo.CompilerTest do
       excerpt_parser: {NegateParser, []},
       body_parser: {NegateParser, []}
     ]
-    assert {:ok, "incompetent-slug", post} = compile(raw_post, options)
+    assert {:ok, post} = compile(raw_post, options)
     assert post.title == "Incompetent Title"
     assert post.slug == "incompetent-slug"
     assert post.datetime == DateTime.from_naive!(~N[2017-01-01 00:00:00], "Etc/UTC")
