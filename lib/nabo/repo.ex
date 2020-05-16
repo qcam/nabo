@@ -58,6 +58,8 @@ defmodule Nabo.Repo do
       @root_path root_path
       @compiler_options compiler_options
 
+      def __options__(), do: unquote(options)
+
       @before_compile unquote(__MODULE__)
     end
   end
