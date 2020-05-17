@@ -32,7 +32,7 @@ defmodule Mix.Tasks.Nabo.Gen.PostTest do
     end
 
     test "expects valid repo" do
-      assert_raise(Mix.Error, "DoesNotExist is not a repo", fn ->
+      assert_raise(Mix.Error, "Could not load DoesNotExist due to :nofile", fn ->
         run(["foo", "--repo=DoesNotExist"])
       end)
     end

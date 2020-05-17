@@ -30,45 +30,37 @@ defmodule Mix.Tasks.Nabo.Gen.Post do
           |> Keyword.fetch!(:repo)
           |> List.wrap()
           |> Module.concat()
+          |> ensure_repo(args)
 
-        case Code.ensure_loaded(repo) do
-          {:module, repo} ->
-            published_at = DateTime.utc_now()
+        published_at = DateTime.utc_now()
+        file_name = DateTime.to_iso8601(published_at, :basic) <> "_" <> slug <> ".md"
 
-            options = repo.__options__()
-            file_path =
-              options
-              |> Keyword.fetch!(:root)
-              |> Path.relative_to_cwd()
-              |> Path.join("#{format_datetime(published_at)}_#{slug}.md")
-
-            create_file(file_path, post_template(slug: slug, published_at: published_at))
-
-          {:error, reason} ->
-            Mix.raise("#{inspect(repo)} is not a repo")
-        end
+        repo.__options__()
+        |> Keyword.fetch!(:root)
+        |> Path.relative_to_cwd()
+        |> Path.join(file_name)
+        |> create_file(post_template(slug: slug, published_at: published_at))
 
       _ ->
-        Mix.raise "expected nabo.gen.post to receive post slug, " <>
-                  "got: #{inspect(Enum.join(args, " "))}"
+        Mix.raise("nabo.gen.post expects a slug, got: #{inspect(args)}")
     end
   end
 
-  defp format_datetime(published_at) do
-    [
-      published_at.year,
-      pad_string(published_at.month),
-      pad_string(published_at.day),
-      pad_string(published_at.hour),
-      pad_string(published_at.minute),
-      pad_string(published_at.second),
-    ] |> Enum.join("")
-  end
+  defp ensure_repo(repo, args) do
+    Mix.Task.run("loadpaths", args)
+    Mix.Task.run("compile", args)
 
-  defp pad_string(integer) do
-    integer
-    |> Integer.to_string
-    |> String.pad_leading(2, "0")
+    case Code.ensure_loaded(repo) do
+      {:module, repo} ->
+        if function_exported?(repo, :__options__, 0) do
+          repo
+        else
+          Mix.raise("#{inspect(repo)} is not a Nabo.Repo")
+        end
+
+      {:error, reason} ->
+        Mix.raise("Could not load #{inspect(repo)} due to #{inspect(reason)}")
+    end
   end
 
   embed_template :post, """
