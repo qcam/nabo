@@ -32,7 +32,7 @@ defmodule Mix.Tasks.Nabo.Gen.Post do
           |> Module.concat()
           |> ensure_repo(args)
 
-        published_at = DateTime.utc_now()
+        published_at = DateTime.truncate(DateTime.utc_now(), :second)
         file_name = DateTime.to_iso8601(published_at, :basic) <> "_" <> slug <> ".md"
 
         repo.__options__()
