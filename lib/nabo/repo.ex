@@ -53,7 +53,10 @@ defmodule Nabo.Repo do
         |> Keyword.fetch!(:root)
         |> Path.relative_to_cwd()
 
-      compiler_options = Keyword.get(options, :compiler, [])
+      compiler_options =
+        options
+        |> Keyword.get(:compiler, [])
+        |> Nabo.Compiler.Options.new()
 
       @root_path root_path
       @compiler_options compiler_options
@@ -125,7 +128,7 @@ defmodule Nabo.Repo do
   end
 
   defp compile(path, options) do
-    log_level = Keyword.get(options, :log_level, :warn)
+    log_level = options.log_level
     content = File.read!(path)
 
     case Nabo.Compiler.compile(content, options) do

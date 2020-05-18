@@ -1,8 +1,6 @@
 defmodule Nabo.CompilerTest do
   use ExUnit.Case, async: true
 
-  import Nabo.Compiler, only: [compile: 2]
-
   defmodule IncompetentFrontParser do
     @behaviour Nabo.Parser
 
@@ -77,10 +75,11 @@ defmodule Nabo.CompilerTest do
     """
 
     options = [
-      front_parser: {IncompetentFrontParser, []},
+      metadata_parser: {IncompetentFrontParser, []},
       excerpt_parser: {NegateParser, []},
       body_parser: {NegateParser, []}
     ]
+
     assert {:ok, post} = compile(raw_post, options)
     assert post.title == "Incompetent Title"
     assert post.slug == "incompetent-slug"
@@ -89,5 +88,9 @@ defmodule Nabo.CompilerTest do
     assert post.excerpt_html == "This IS NOT the _excerpt_."
     assert post.body == "This is the **BODY**.\n"
     assert post.body_html == "This IS NOT the **BODY**."
+  end
+
+  defp compile(data, options) do
+    Nabo.Compiler.compile(data, Nabo.Compiler.Options.new(options))
   end
 end
