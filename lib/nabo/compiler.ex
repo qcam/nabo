@@ -6,13 +6,11 @@ defmodule Nabo.Compiler do
   defmodule Options do
     @moduledoc false
 
-    defstruct [
-      metadata_parser: {Nabo.Parser.Front, []},
-      excerpt_parser: {Nabo.Parser.Markdown, []},
-      body_parser: {Nabo.Parser.Markdown, []},
-      split_pattern: ~r/[\s\r\n]---[\s\r\n]/s,
-      log_level: :warn
-    ]
+    defstruct metadata_parser: {Nabo.Parser.Front, []},
+              excerpt_parser: {Nabo.Parser.Markdown, []},
+              body_parser: {Nabo.Parser.Markdown, []},
+              split_pattern: ~r/[\s\r\n]---[\s\r\n]/s,
+              log_level: :warn
 
     def new(options) when is_list(options) do
       options = struct!(__MODULE__, options)
@@ -39,7 +37,8 @@ defmodule Nabo.Compiler do
           end
 
         {:error, reason} ->
-          raise ArgumentError, "Configured parser #{inspect(module)} is not available due to #{inspect(reason)}"
+          raise ArgumentError,
+                "Configured parser #{inspect(module)} is not available due to #{inspect(reason)}"
       end
     end
   end

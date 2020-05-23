@@ -5,12 +5,13 @@ defmodule Nabo.CompilerTest do
     @behaviour Nabo.Parser
 
     def parse(_data, _options) do
-      {:ok, %Nabo.Metadata{
-        title: "Incompetent Title",
-        slug: "incompetent-slug",
-        published_at: DateTime.from_naive!(~N[2017-01-01 00:00:00], "Etc/UTC"),
-        draft?: false
-      }}
+      {:ok,
+       %Nabo.Metadata{
+         title: "Incompetent Title",
+         slug: "incompetent-slug",
+         published_at: DateTime.from_naive!(~N[2017-01-01 00:00:00], "Etc/UTC"),
+         draft?: false
+       }}
     end
   end
 
@@ -55,7 +56,7 @@ defmodule Nabo.CompilerTest do
     This is the **BODY**.
     """
 
-    assert {:ok, post} = compile(raw_post, [split_pattern: "<<----->>"])
+    assert {:ok, post} = compile(raw_post, split_pattern: "<<----->>")
     assert post.title == "Title"
     assert post.slug == "slug"
     assert post.published_at == DateTime.from_naive!(~N[2017-01-01 01:02:03], "Etc/UTC")

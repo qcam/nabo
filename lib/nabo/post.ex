@@ -62,17 +62,17 @@ defmodule Nabo.Post do
   @type slug() :: String.t()
 
   @type t() :: %__MODULE__{
-    body: String.t,
-    body_html: String.t,
-    published_at: DateTime.t,
-    draft?: boolean,
-    reading_time: Float.t,
-    excerpt: String.t,
-    excerpt_html: String.t,
-    metadata: Map.t,
-    slug: slug(),
-    title: String.t,
-  }
+          body: String.t(),
+          body_html: String.t(),
+          published_at: DateTime.t(),
+          draft?: boolean,
+          reading_time: Float.t(),
+          excerpt: String.t(),
+          excerpt_html: String.t(),
+          metadata: Map.t(),
+          slug: slug(),
+          title: String.t()
+        }
 
   @doc false
 

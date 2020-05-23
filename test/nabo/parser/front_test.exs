@@ -76,7 +76,9 @@ defmodule Nabo.Parser.FrontTest do
     """
 
     assert {:error, reason} = parse(json, [])
-    assert reason == "\"published_at\" has to be in ISO-8601 format, got: \"Fri, 21 Nov 1997 09:55:06 -0600\""
+
+    assert reason ==
+             "\"published_at\" has to be in ISO-8601 format, got: \"Fri, 21 Nov 1997 09:55:06 -0600\""
   end
 
   test "parse/2 with bad JSON" do

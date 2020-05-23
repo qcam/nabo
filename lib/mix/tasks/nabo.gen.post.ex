@@ -63,12 +63,12 @@ defmodule Mix.Tasks.Nabo.Gen.Post do
     end
   end
 
-  embed_template :post, """
+  embed_template(:post, """
   {
     "title": "",
     "slug": "<%= @slug %>",
     "published_at": "<%= DateTime.to_iso8601(@published_at) %>"
   }
   ---
-  """
+  """)
 end

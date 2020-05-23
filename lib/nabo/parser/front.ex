@@ -25,7 +25,8 @@ defmodule Nabo.Parser.Front do
           {:error, reason} -> {:error, reason}
         end
 
-      {:error, _} = error -> error
+      {:error, _} = error ->
+        error
     end
   end
 
@@ -54,7 +55,8 @@ defmodule Nabo.Parser.Front do
             {:ok, published_at}
 
           {:error, _reason} ->
-            {:error, "\"published_at\" has to be in ISO-8601 format, got: #{inspect(published_at)}"}
+            {:error,
+             "\"published_at\" has to be in ISO-8601 format, got: #{inspect(published_at)}"}
         end
     end
   end

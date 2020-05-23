@@ -12,8 +12,12 @@ defmodule Nabo.IntegrationTest do
     refute post.draft?
     assert post.excerpt == "This is the post for 02-02"
     assert post.excerpt_html == "<p>This is the post for 02-02</p>\n"
-    assert post.body == "### Welcome!\n\nThis is your first blog post built with *Nabo blog engine*\n"
-    assert post.body_html == "<h3>Welcome!</h3>\n<p>This is your first blog post built with <em>Nabo blog engine</em></p>\n"
+
+    assert post.body ==
+             "### Welcome!\n\nThis is your first blog post built with *Nabo blog engine*\n"
+
+    assert post.body_html ==
+             "<h3>Welcome!</h3>\n<p>This is your first blog post built with <em>Nabo blog engine</em></p>\n"
 
     assert TestRepos.Default.get("something-that-does-not-exist") == nil
   end
@@ -35,7 +39,9 @@ defmodule Nabo.IntegrationTest do
     assert post = TestRepos.Customized.get("this-year-0303")
 
     assert post.body == "### Welcome!\n\n```elixir\na = 1\n```\n"
-    assert post.body_html == "<h3>Welcome!</h3>\n<pre><code class=\"elixir nabo-elixir\">a = 1</code></pre>\n"
+
+    assert post.body_html ==
+             "<h3>Welcome!</h3>\n<pre><code class=\"elixir nabo-elixir\">a = 1</code></pre>\n"
   end
 
   test "all/1" do
@@ -48,7 +54,15 @@ defmodule Nabo.IntegrationTest do
   end
 
   test "availables/0" do
-    expected = ["draft-post", "last-year", "next-year", "this-year-0101", "this-year-0202", "this-year-0303"]
+    expected = [
+      "draft-post",
+      "last-year",
+      "next-year",
+      "this-year-0101",
+      "this-year-0202",
+      "this-year-0303"
+    ]
+
     assert TestRepos.Default.availables() == expected
   end
 end
