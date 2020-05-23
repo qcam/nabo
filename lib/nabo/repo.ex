@@ -18,7 +18,6 @@ defmodule Nabo.Repo do
         root: "priv/posts",
         compiler: [
           split_pattern: "<<--------->>",
-          log_level: :warn,
           front_parser: {MyJSONParser, []},
           excerpt_parser: {MyExcerptParser, []},
           body_parser: {Nabo.Parser.Markdown, %Earmark.Options{smartypants: false}}
@@ -30,7 +29,6 @@ defmodule Nabo.Repo do
   * `:compiler` - the compiler options, includes of four sub-options. See `Nabo.Parser` for instructions of how to implement a parser.
     * `:split_pattern` - the delimeter that separates front-matter, excerpt and post body. This will be passed
       as the second argument in `String.split/3`.
-    * `:log_level` - the error log level in compile time, use `false` to disable logging completely. Defaults to `:warn`.
     * `:front_parser` - the options for parsing front matter, in `{parser_module, parser_options}` format.
       Parser options will be passed to `parse/2` function in parser module. Defaults to `{Nabo.Parser.Front, []}`
     * `:excerpt_parser` - the options for parsing post excerpt, in `{parser_module, parser_options}` format.
@@ -39,8 +37,6 @@ defmodule Nabo.Repo do
       Parser options will be passed to `parse/2` function in parser module. Defaults to `{Nabo.Parser.Markdown, []}`
 
   """
-
-  require Logger
 
   @doc false
 
@@ -128,7 +124,6 @@ defmodule Nabo.Repo do
   end
 
   defp compile(path, options) do
-    log_level = options.log_level
     content = File.read!(path)
 
     case Nabo.Compiler.compile(content, options) do
@@ -136,7 +131,7 @@ defmodule Nabo.Repo do
         post
 
       {:error, reason} ->
-        Logger.log(log_level, ["Could not compile ", inspect(path), " due to: ", reason])
+        IO.warn(["Could not compile ", inspect(path), " due to: ", reason], [])
 
         nil
     end

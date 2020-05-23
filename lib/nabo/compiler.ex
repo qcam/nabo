@@ -9,8 +9,7 @@ defmodule Nabo.Compiler do
     defstruct metadata_parser: {Nabo.Parser.Front, []},
               excerpt_parser: {Nabo.Parser.Markdown, []},
               body_parser: {Nabo.Parser.Markdown, []},
-              split_pattern: ~r/[\s\r\n]---[\s\r\n]/s,
-              log_level: :warn
+              split_pattern: ~r/[\s\r\n]---[\s\r\n]/s
 
     def new(options) when is_list(options) do
       options = struct!(__MODULE__, options)

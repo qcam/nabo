@@ -21,9 +21,7 @@ defmodule Nabo.Mixfile do
     ]
   end
 
-  def application() do
-    [applications: [:logger]]
-  end
+  def application(), do: []
 
   defp deps() do
     [
