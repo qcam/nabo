@@ -1,5 +1,16 @@
 # Changelog
 
+## v2.0.0
+
+### Breaking changes
+
+* Rename `:datetime` to `:published_at`.
+* `Nabo.Repo.get/1` returning.
+
+### Improvements
+
+* Fix a compilation bug.
+
 ## v1.0.1
 
 * Mark post paths as `@external_resource` for better recompilation.
