@@ -66,10 +66,10 @@ defmodule Nabo.Post do
           body_html: String.t(),
           published_at: DateTime.t(),
           draft?: boolean,
-          reading_time: Float.t(),
+          reading_time: float,
           excerpt: String.t(),
           excerpt_html: String.t(),
-          metadata: Map.t(),
+          metadata: map,
           slug: slug(),
           title: String.t()
         }
