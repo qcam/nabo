@@ -21,9 +21,9 @@ parsers.
 ```elixir
 def deps() do
   [
-    {:nabo, "~> 1.0.2", runtime: false},
+    {:nabo, "~> 2.0.0", runtime: false},
     {:jason, "~> 1.0.0", runtime: false}, # optional
-    {:earmark, "~> 1.2.4", runtime: false} # optional
+    {:earmark, "~> 1.4", runtime: false} # optional
   ]
 end
 ```
