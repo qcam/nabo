@@ -34,11 +34,7 @@ Full documentation can be found on [HexDocs](https://hexdocs.pm/nabo/) and you c
 
 ## Getting started
 
-To start using Nabo, first you need to create your own repo. Use this mix task:
-
-```
-mix nabo.gen.repo MyApp.Repo
-```
+To start using Nabo, first you need to create your own repo.
 
 Nabo assumes your posts are in `priv/posts`, if they are not, you can change the
 `:root` option in the generated repo.
@@ -93,10 +89,10 @@ Then in your template.
 ```elixir
 # index.html.eex
 <div class="posts">
-  <%= for post <- posts do %>
+  <%= for post <- @posts do %>
   <div class="post">
     <h3><%= post.title %></h3>
-    <div class="excerpt"><%= post.excerpt_html %></div>
+    <div class="excerpt"><%= raw post.excerpt_html %></div>
   </div>
   <% end %>
 </div>
@@ -105,8 +101,8 @@ Then in your template.
 ```elixir
 # show.html.eex
 <div class="post">
-  <h1><%= post.title %></h1>
-  <div class="body"><%= post.body_html %></div>
+  <h1><%= @post.title %></h1>
+  <div class="body"><%= raw @post.body_html %></div>
 </div>
 ```
 
